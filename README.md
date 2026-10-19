@@ -3,10 +3,13 @@
 Hi Genius 是一款免费的英语学习与个人知识管理工具，帮助你整理、检索、复习和练习英语学习资料。
 
 ## 📦 下载资源
+建议单独建一个文件夹放置所有文件
 
-- **应用：** [Hi_Genius.html](./Hi_Genius.html)
-- **初始学习资料：** [Hi_Genius_Starter_Data.json](./Hi_Genius_Starter_Data.json)
-- **视频资料包：** 请前往本项目的 Releases 页面下载。
+- **当前版本：** V1.0.0
+- **应用：** [下载 Hi Genius（HTML）](https://github.com/potatoniniViber/hi-genius/releases/download/V1.0.0/Hi_Genius.html)
+- **初始学习资料：** [下载 JSON 资料包](https://github.com/potatoniniViber/hi-genius/releases/download/V1.0.0/Hi_Genius_Starter_Data.json)
+- **视频资料包：** [下载视频 ZIP（约 1.21 GB）](https://github.com/potatoniniViber/hi-genius/releases/download/V1.0.0/Hi_Genius_Video_Pack_v1.0.0.zip)
+
 
 ## 🚀 快速开始
 
