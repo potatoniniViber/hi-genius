@@ -2597,6 +2597,9 @@
         .center-content.markdown-reader .markdown-delete-pair > blockquote {
             padding-right:44px;
         }
+        /* V126: an empty MD pair still exposes both editable rows. */
+        #centerContent.markdown-reader .markdown-delete-pair > blockquote:empty { min-height:54px; }
+        #centerContent.markdown-reader .markdown-delete-pair > p:empty { min-height:28px; }
         .markdown-pair-delete {
             position:absolute;
             z-index:9;
@@ -3688,7 +3691,7 @@
         #notesPageHeading,#notesPageTabs { display:none; }
         #rightPanel:has(> #rightScroll > .topic-notes-ui) > #notesPageHeading { display:flex; }
         #rightPanel:has(> #rightScroll > .topic-notes-ui) > #notesPageTabs { display:flex; }
-        #rightPanel:has(> #rightScroll > .topic-notes-ui) > .right-toolbar > :not(#notesFoldAllBtn) { display:none !important; }
+        #rightPanel:has(> #rightScroll > .topic-notes-ui) > .right-toolbar > :not(#notesFoldAllBtn):not(#v133NotesTitle) { display:none !important; }
         /* Share .panel-header typography/padding with the directory, without JS measurements. */
         #notesPageHeading { margin:0; }
         #notesPageTabs {
@@ -3775,7 +3778,7 @@
             background:var(--v99-topbar) !important; background-image:none !important;
             color:#fffaf5; box-shadow:none !important; border-bottom:0 !important;
         }
-        #app > .divider::before { height:64px; }
+        #app > .divider::before { height:var(--v128-topbar-height,48px); }
         #leftPanel > .brand-slogan {
             font-family:Georgia,"Times New Roman",serif; font-size:19px; font-weight:700; font-style:italic;
             letter-spacing:-.025em; line-height:1; color:#fffaf5; text-shadow:none;
@@ -4102,7 +4105,7 @@
         #rightScroll .v107-vocab-complete :is(.core-word-add,.core-word-delete,.example-add-btn,.example-remove-btn,.examples-empty,.vocab-author-tools) { display:none !important; }
         #rightScroll .v107-vocab-complete :is(input,textarea) { border:0; background:transparent; padding:0; box-shadow:none; cursor:default; }
         #centerPanel.v99-topic-toolbar #paragraphInputBtn { --v99-reader-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M5%206h14M5%2010h14M5%2014h14M5%2018h9%22%2F%3E%3C%2Fsvg%3E"); }
-        #centerContent .v108-source-choices { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; padding:42px 16px; }
+        #centerContent .v108-source-choices { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; padding:42px 16px; pointer-events:auto; }
         #centerContent .v108-source-choices button { border:1px solid #d8c8b6; border-radius:9px; background:#fffaf3; color:#6b4a2e; padding:10px 15px; font:500 14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; cursor:pointer; }
         #centerContent .v108-source-choices button:hover { background:#eee4d7; }
         #centerContent .source-longform { padding:22px 28px 35px; background:#fff; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif; }
@@ -4275,6 +4278,272 @@
 }
 
 /* End V118 annotation presentation */
+
+/* V128: video metadata overlays the player; no footer height is reserved. */
+#workplaceMediaHost { padding-top:6px; }
+#workplaceMediaHost .workplace-video-shell > .workplace-sync-meta {
+    position:absolute; inset:0 0 auto; z-index:2;
+    margin:0; border:0; padding:8px 12px;
+    display:flex; align-items:center; flex-wrap:nowrap; gap:8px;
+    max-height:calc(100% - 64px); overflow:auto;
+    background:rgba(28,22,18,.78); color:#fffaf5;
+    opacity:0; pointer-events:none; transition:opacity .12s ease;
+    scrollbar-width:thin;
+}
+#workplaceMediaHost .workplace-video-shell:is(:hover,:focus-within) > .workplace-sync-meta {
+    opacity:1; pointer-events:auto;
+}
+#workplaceMediaHost .workplace-sync-file {
+    flex:0 1 44%; min-width:80px; width:auto; max-width:44%; color:#fffaf5;
+}
+#workplaceMediaHost .workplace-sync-controls {
+    flex:0 0 auto; margin-left:auto; flex-wrap:nowrap;
+}
+#workplaceMediaHost .workplace-sync-badge { flex:0 0 auto; }
+#workplaceMediaHost .workplace-video-placeholder {
+    padding-top:56px; overflow:auto; justify-content:flex-start;
+}
+#workplaceMediaHost .workplace-sync-controls button { white-space:nowrap; }
+#workplaceMediaHost .workplace-sync-controls button:focus-visible {
+    outline:2px solid #fffaf5; outline-offset:2px;
+}
+@media (max-width:700px) { #workplaceMediaHost { padding-top:4px; } }
+@media (prefers-reduced-motion:reduce) {
+    #workplaceMediaHost .workplace-video-shell > .workplace-sync-meta { transition:none; }
+}
+
+
+/* V129: book typography is presentation-only on ordinary source pages. */
+#app #centerContent.v129-editorial {
+  --v129-en-font:Georgia,"Times New Roman",serif;
+  --v129-zh-font:SimSun,"Songti SC","Noto Serif CJK SC",serif;
+  --v129-pair-gap:5px;
+  padding:16px 24px 28px;
+  background:#fffdf8; line-height:1.6;
+}
+#app #centerContent.v129-editorial[data-v129-language="en"],
+#app #centerContent.v129-editorial[data-v129-language="zh"] { --v129-pair-gap:0px; }
+#app #centerContent.v129-editorial .markdown-paper {
+  width:100%; max-width:none; min-height:100%; margin:0; padding:0;
+  background:transparent; border:0; border-radius:0; box-shadow:none;
+  font-family:var(--v129-en-font);
+}
+#app #centerContent.v129-editorial blockquote {
+  margin:0; padding:0; border:0; border-radius:0; background:none;
+  font-family:var(--v129-en-font); font-size:18px; font-weight:400;
+  line-height:1.6; color:#2f2924;
+}
+#app #centerContent.v129-editorial blockquote + p {
+  margin:var(--v129-pair-gap) 0 var(--v129-pair-gap); padding:0;
+  border:0; border-radius:0; background:none;
+  font-family:var(--v129-zh-font); font-size:15.5px; font-weight:400;
+  line-height:1.6; color:#71685f;
+}
+#app #centerContent.v129-editorial :is(.markdown-delete-pair,.speech-structured-pair) {
+  margin:0 0 var(--v129-pair-gap); padding:0; border:0;
+}
+#app #centerContent.v129-editorial :is(.markdown-delete-pair,.speech-structured-pair) > p { margin-bottom:0; }
+/* Populated translations use their line box; empty fields keep the V126 editing targets. */
+#app #centerContent.v129-editorial :is(.markdown-delete-pair,.speech-structured-pair) > p:not(:empty) { min-height:0; }
+#app #centerContent.v129-editorial blockquote > :is(p,div) { margin:0; }
+/* Retain delete controls in the existing outer gutter rather than reserving 44px of text width. */
+#app #centerContent.v129-editorial :is(.markdown-pair-delete,.speech-pair-delete) {
+  top:2px; right:-24px; width:24px; height:24px;
+}
+#app #centerContent.v129-editorial h1 {
+  margin:0 0 5px; font-family:var(--v129-en-font);
+  font-size:24px; line-height:1.3; font-weight:600;
+}
+#app #centerContent.v129-editorial h2 {
+  margin:0 0 16px; font-family:var(--v129-zh-font);
+  font-size:16px; line-height:1.5; font-weight:400;
+}
+#app #centerContent.v129-editorial :is(h3,h4,h5,h6) { margin:16px 0 8px; }
+
+
+/* V132: 12px directory and note gutters; original text stays at 24px. */
+#leftPanel #topicList.topic-list,
+#leftPanel:not(.compact-panel) #topicList.topic-list { padding-left:12px; padding-right:12px; }
+#topicList :is(.directory-root-wrap,.category-root-wrap) > .subtopics:not(.collapsed) {
+  margin-left:9px; padding-left:3.5px;
+}
+#topicList .subcategory-block { margin-left:3.5px; }
+#topicList .subcategory-topics { padding-left:3.5px; }
+#rightPanel #rightScroll:has(> .topic-notes-ui),
+#rightPanel #notesPageTabs { padding-left:12px; padding-right:12px; }
+
+
+/* Ordinary source notes only; theme lives outside the scrolling note viewport. */
+#rightPanel.v133-source-notes > .right-toolbar > #v133NotesTitle {
+  display:none !important; margin-right:auto; flex:0 0 auto; color:#fffaf5;
+  font:600 15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+}
+#rightPanel > .right-toolbar > #v133NotesTitle[hidden],
+#v133ThemeSlot[hidden] { display:none !important; }
+#v133ThemeSlot {
+  flex:0 0 auto; min-height:0; margin:6px 12px 10px;
+  height:auto; max-height:120px;
+}
+#v133ThemeSlot[data-aligned="true"] { max-height:none; }
+#v133ThemeSlot .v133-theme-card {
+  box-sizing:border-box; height:100%; max-height:120px; overflow:auto;
+  padding:12px; border:1px solid #ded5ca; border-radius:12px;
+  background:#fffdf8; color:#3d362e; overscroll-behavior:contain;
+}
+#v133ThemeSlot[data-aligned="true"] .v133-theme-card { max-height:none; }
+#v133ThemeSlot .v133-theme-label { margin:0 0 8px; color:#797067; font-size:12px; line-height:18px; font-weight:500; }
+#v133ThemeSlot .v133-theme-field { min-width:0; min-height:1.4em; outline:none; overflow-wrap:anywhere; }
+#v133ThemeSlot .v133-theme-zh {
+  font:600 24px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+}
+#v133ThemeSlot .v133-theme-en { margin-top:8px; color:#71685f; font:400 18px/1.5 Georgia,"Times New Roman",serif; }
+#v133ThemeSlot .v133-theme-field:empty::before { content:attr(data-placeholder); color:#afa394; pointer-events:none; font-weight:400; }
+#v133ThemeSlot .v133-theme-field :is(p,div) { margin:0; }
+#v133ThemeSlot .v133-theme-field:focus-visible { outline:2px solid #8a5e3b; outline-offset:3px; }
+#rightPanel.v133-source-notes > #notesPageTabs { padding-top:4px; padding-bottom:4px; }
+#rightPanel.v133-source-notes > #notesPageTabs [role="tab"] { min-height:30px; padding:4px 10px; line-height:20px; font-size:14px; }
+#rightPanel.v133-source-notes #rightScroll .topic-notes-ui > [data-step="1"] { display:none !important; }
+
+
+/* The resize grip is outside the native player and its seek bar. */
+#workplaceMediaHost .v134-video-resizer {
+  box-sizing:border-box; display:flex; align-items:center; justify-content:center;
+  width:min(100%,800px); height:4px; margin:0 auto; border:0; padding:0;
+  background:transparent; cursor:ns-resize; touch-action:none; user-select:none;
+}
+#workplaceMediaHost .v134-video-resizer::before {
+  content:""; width:40px; height:3px; border-radius:3px; background:#c4b4a1;
+}
+#workplaceMediaHost .v134-video-resizer:is(:hover,:focus-visible,.is-dragging)::before { background:#8a5e3b; }
+#workplaceMediaHost .v134-video-resizer:focus-visible { outline:2px solid #8a5e3b; outline-offset:-2px; }
+@media (pointer:coarse) { #workplaceMediaHost .v134-video-resizer { height:8px; } }
+#workplaceMediaHost .workplace-video-card.v134-height-enabled:not(.v134-custom-height) video {
+  max-height:min(300px,var(--v134-height-limit));
+}
+#workplaceMediaHost .workplace-video-card.v134-custom-height > .workplace-video-shell {
+  height:var(--v134-video-height); min-height:0;
+}
+#workplaceMediaHost .workplace-video-card.v134-custom-height > .workplace-video-shell video {
+  width:100%; height:100%; max-height:none; object-fit:contain;
+}
+#workplaceMediaHost .workplace-video-card.v134-custom-height .workplace-video-placeholder {
+  box-sizing:border-box; height:100%; min-height:0; overflow:auto;
+}
+
+
+/* Reuse only the existing player/blank space for the drag hit area. */
+#workplaceMediaHost { padding-bottom:4px; }
+#workplaceMediaHost .v134-video-resizer { position:relative; z-index:2; }
+#workplaceMediaHost .v134-video-resizer::after {
+  content:""; position:absolute; top:0; left:0; right:0; height:calc(100% + 4px);
+  cursor:ns-resize; touch-action:none;
+}
+#v133ThemeSlot .v135-theme-line {
+  box-sizing:border-box; display:block; width:100%; min-width:0; min-height:0;
+  margin:0; padding:0; border:0; border-radius:0; resize:none; overflow:hidden;
+  background:transparent; color:#5e554b; white-space:pre-wrap; overflow-wrap:anywhere;
+  font:500 14px/20px -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  outline:none;
+}
+#v133ThemeSlot .v135-theme-label { margin-top:8px; font-weight:600; }
+#v133ThemeSlot .v135-theme-zh { margin-top:4px; color:#3d362e; font-size:24px; font-weight:700; line-height:1.3; }
+#v133ThemeSlot .v135-theme-en { margin-top:6px; color:#71685f; font:400 16px/1.5 Georgia,"Times New Roman",serif; }
+#v133ThemeSlot .v135-theme-line::placeholder { color:#afa394; opacity:1; }
+#v133ThemeSlot .v135-theme-line:focus-visible { outline:2px solid #8a5e3b; outline-offset:2px; }
+
+
+/* Auto margins center the complete four-line group; overflow resolves them to zero. */
+#v133ThemeSlot .v135-theme-template { display:flex; flex-direction:column; }
+#v133ThemeSlot .v136-theme-content { flex:0 0 auto; width:100%; margin-top:auto; margin-bottom:auto; }
+/* Only these three ordinary-source toolbar controls become more compact. */
+#app #centerPanel.v99-topic-toolbar #centerLangFilter > :is(#v118AnnotationsToggle,#centerLangCycleBtn),
+#app #rightPanel.v133-source-notes > .right-toolbar > #notesFoldAllBtn {
+  box-sizing:border-box; height:28px !important; min-height:28px !important; max-height:28px !important;
+  padding:3px 10px !important; line-height:20px !important;
+}
+
+
+.v137-height-grip {
+  box-sizing:border-box; display:flex; position:relative; z-index:2; align-items:center; justify-content:center;
+  height:4px; border:0; padding:0; background:transparent; cursor:ns-resize; touch-action:none; user-select:none;
+}
+.v137-height-grip::before { content:""; width:40px; height:3px; border-radius:3px; background:#c4b4a1; }
+.v137-height-grip::after { content:""; position:absolute; top:0; left:0; right:0; height:calc(100% + 4px); cursor:ns-resize; touch-action:none; }
+.v137-height-grip:is(:hover,:focus-visible,.is-dragging)::before { background:#8a5e3b; }
+.v137-height-grip:focus-visible { outline:2px solid #8a5e3b; outline-offset:-2px; }
+#rightPanel.v137-theme-height-control > #v133ThemeSlot { margin-bottom:0; }
+#rightPanel > .v137-theme-resizer { flex:0 0 auto; width:calc(100% - 24px); margin:0 12px 6px; }
+@media(pointer:coarse){.v137-height-grip,#workplaceMediaHost .v137-height-grip { height:8px; }#rightPanel > .v137-theme-resizer{margin-bottom:2px;}}
+/* State class overrides sticky touch hover/focus; errors remain in the separate placeholder. */
+#workplaceMediaHost .workplace-video-shell.v137-managed-media > .workplace-sync-meta { opacity:0; pointer-events:none; }
+#workplaceMediaHost .workplace-video-shell.v137-managed-media.v137-media-ui-visible > .workplace-sync-meta { opacity:1; pointer-events:auto; }
+.v137-reader-overlay { position:relative; flex:0 0 0px; height:0; z-index:6; }
+.v137-reader-overlay[hidden]{display:none;}
+.v137-reader-toggle { position:absolute; top:8px; right:24px; box-sizing:border-box; height:28px; min-height:28px; padding:3px 10px; border:1px solid #d9cdbd; border-radius:8px; background:#fffaf3; color:#6b4a2e; font:600 13px/20px -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; cursor:pointer; }
+.v137-reader-toggle:focus-visible { outline:2px solid #8a5e3b; outline-offset:2px; }
+#centerContent.v137-source-readonly { user-select:text; }
+#centerContent.v137-reader-controls .markdown-paper > :is(h1,blockquote,p):first-child,
+#centerContent.v137-reader-controls .markdown-paper > h1.reader-lang-hidden + h2,
+#centerContent.v137-reader-controls .markdown-paper > :is(.markdown-delete-pair,.speech-structured-pair):first-child > blockquote,
+#centerContent.v137-reader-controls > :is(p,blockquote):first-child { padding-right:84px; }
+#markdownUploadLabel[aria-disabled="true"]{pointer-events:none;opacity:.5;}
+
+
+/* Single-pane display preserves the existing editors and native player. */
+#app.v138-solo-left > :is(#centerPanel,#rightPanel,#divider2),
+#app.v138-solo-right > :is(#leftPanel,#centerPanel,#divider1){display:none !important;}
+#app.v138-solo-left > #leftPanel,#app.v138-solo-right > #rightPanel{display:flex !important;width:100% !important;min-width:0 !important;max-width:none !important;flex:1 1 auto !important;}
+#app.v138-solo-left > #divider1,#app.v138-solo-right > #divider2{display:block !important;position:absolute;top:0;bottom:0;width:0 !important;min-width:0 !important;flex:0 0 0 !important;z-index:82;pointer-events:none;}
+#app.v138-solo-left > #divider1{right:0;}
+#app.v138-solo-right > #divider2{left:0;}
+#app:is(.v138-solo-left,.v138-solo-right) > .divider::after{display:none !important;}
+body.v138-single-pane #v118AnnotationLayer{display:none !important;}
+#topicList :is(.v138-drop-before,.v138-drop-after)::after{content:"";position:absolute;left:0;right:0;height:3px;background:#8a5e3b;border-radius:2px;pointer-events:none;z-index:3;}
+#topicList .v138-drop-before::after{top:-3px;}#topicList .v138-drop-after::after{bottom:-3px;}
+#topicList .subcategory-header.dragging{opacity:.55;}
+
+/* Direct dual arrows share one compact area; only the reverse arrow remains after collapse/solo. */
+#app > .divider > .v139-panel-arrows{position:absolute;z-index:80;top:calc(var(--v128-topbar-height,48px) - 2px);left:50%;transform:translateX(-50%);display:flex;height:28px;border:1px solid #e5ddd4;border-radius:7px;background:#f8f5f0;box-shadow:0 1px 4px #4b37251a;pointer-events:auto;}
+#app .v139-panel-arrows > .panel-fold-toggle{position:static;transform:none;flex:0 0 22px;width:22px;height:26px;padding:0;border:0;border-radius:5px;box-shadow:none;background:transparent;touch-action:manipulation;}
+#app .v139-panel-arrows > .panel-fold-toggle[hidden]{display:none !important;}
+#app .v139-panel-arrows > .panel-fold-toggle:hover{background:#eee5da;}
+#app.v138-solo-left > #divider1 > .v139-panel-arrows{left:auto;right:4px;transform:none;}
+#app.v138-solo-right > #divider2 > .v139-panel-arrows{left:4px;transform:none;}
+#topicList :is(.category-header,.subcategory-header,.pinned-item){position:relative;}
+
+
+/* Background text joins the existing vertically centered theme group. */
+#v133ThemeSlot .v135-theme-background {
+  margin-top:8px; color:#7d7368;
+  font:400 13px/20px -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+}
+.v140-video-tip {
+  position:fixed; z-index:30020; left:50%; bottom:16px; transform:translateX(-50%);
+  max-width:calc(100vw - 32px); box-sizing:border-box; padding:7px 12px; border-radius:9px;
+  background:rgba(54,43,33,.92); color:#fffaf4; text-align:center; pointer-events:none;
+  font:400 13px/20px -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+}
+.v140-video-tip[hidden]{display:none;}
+
+
+/* Empty usage text consumes no row; its small add control shares the old structure label height. */
+#rightScroll .topic-notes-ui .v141-usage-heading{display:flex;align-items:center;gap:4px;min-height:28px;margin:8px 0 6px;}
+#rightScroll .topic-notes-ui .v141-usage-heading > label{display:inline;width:auto;min-width:0;margin:0;padding:0;color:#342f29;font-size:12px;font-weight:600;line-height:1.7;}
+#rightScroll .topic-notes-ui .v141-usage-add{flex:0 0 20px;width:20px;height:20px;min-height:20px;margin:0;padding:0;border:0;border-radius:4px;background:transparent;color:#8a5e3b;font-family:inherit;font-size:15px;font-weight:400;line-height:20px;cursor:pointer;}
+#rightScroll .topic-notes-ui .v141-usage-add:is(:hover,:focus-visible){background:#eee4d7;outline:1px solid #8a5e3b;}
+#rightScroll .topic-notes-ui .v141-usage-body{margin-top:6px;}
+#rightScroll .topic-notes-ui .v141-usage-body[hidden],#rightScroll .topic-notes-ui .v141-usage-add[hidden]{display:none !important;}
+#rightScroll .topic-notes-ui .v141-usage-input{height:28px;min-height:28px;padding:3px 6px;color:#7d7368;font-size:13px;font-weight:400;line-height:20px;border-radius:6px;}
+
+
+#v133ThemeSlot .v133-theme-card{position:relative;}
+#v133ThemeSlot .v142-theme-year{position:absolute;z-index:2;top:8px;right:12px;box-sizing:border-box;width:56px;height:24px;min-height:24px;margin:0;padding:2px 4px;border:1px solid transparent;border-radius:5px;background:#fffdf9;color:#7d7368;text-align:right;font:400 13px/18px -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;}
+#v133ThemeSlot .v142-theme-year::placeholder{color:#afa394;opacity:1;}
+#v133ThemeSlot .v142-theme-year:hover{border-color:#e7dfd5;}
+#v133ThemeSlot .v142-theme-year:focus-visible{outline:2px solid #8a5e3b;outline-offset:1px;}
+/* Reserve only the first text row's right edge, without adding a header or moving the centered group. */
+#v133ThemeSlot .v135-theme-tagline{padding-right:64px;}
+
 </style>
 </head>
 <body>
@@ -4328,7 +4597,7 @@
     <div class="app" id="app">
         <!-- 左屏 -->
         <div class="left-panel" id="leftPanel">
-            <div class="brand-slogan">Hello, genius!</div>
+            <div class="brand-slogan">Hi, genius!</div>
             <div class="panel-header">
                 <span>目录</span>
                 <div class="header-actions">
@@ -4402,14 +4671,15 @@
                     <button data-mode="en">仅英文</button>
                     <button data-mode="zh">仅中文</button>
                 </div>
+                <span id="v133NotesTitle" hidden>学习笔记</span>
                 <button id="notesFoldAllBtn" type="button" hidden disabled>展开</button>
             </div>
-            <div id="notesPageHeading" class="panel-header"><span>学习笔记</span></div>
+            <div id="v133ThemeSlot" hidden></div>
             <div id="notesPageTabs" role="tablist" aria-label="学习笔记分类">
                 <button id="notesTabVocabulary" type="button" role="tab" data-notes-tab="vocabulary" aria-controls="notesPanel2" aria-selected="true" tabindex="0"><span>生词</span><span class="notes-tab-count" data-notes-count="vocabulary">0</span></button>
                 <button id="notesTabSentences" type="button" role="tab" data-notes-tab="highFreq" aria-controls="notesPanel3" aria-selected="false" tabindex="-1"><span>句式</span><span class="notes-tab-count" data-notes-count="highFreq">0</span></button>
                 <button id="notesTabPhrases" type="button" role="tab" data-notes-tab="phraseStructure" aria-controls="notesPanel3" aria-selected="false" tabindex="-1"><span>词组</span><span class="notes-tab-count" data-notes-count="phraseStructure">0</span></button>
-                <button id="notesTabSummary" type="button" role="tab" data-notes-tab="summary" aria-controls="notesPanel1 notesPanel4" aria-selected="false" tabindex="-1"><span>主旨与总结</span></button>
+                <button id="notesTabSummary" type="button" role="tab" data-notes-tab="summary" aria-controls="notesPanel4" aria-selected="false" tabindex="-1"><span>复述</span></button>
             </div>
             <div class="right-scroll" id="rightScroll">
                 <!-- 由 JavaScript 动态渲染 -->
@@ -4434,6 +4704,8 @@
     </div>
 
     <script>
+        // Handle designated video keys before editor/readonly capture handlers.
+        document.addEventListener('keydown', event => window.v140VideoKeys?.handle(event), true);
         // ===== Get OutSpoken v44 =====
         // ============================================================
         //  1. 数据层 (localStorage)
@@ -5412,6 +5684,8 @@
         let centerLangMode = 'bilingual';
         function applyCenterLangFilter() {
             const el = document.getElementById('centerContent');
+            // Presentation state stays on the editor root, outside saved content.
+            if (el && el.dataset.v129Language !== centerLangMode) el.dataset.v129Language = centerLangMode;
             const items = el.querySelectorAll('.summary-item');
             if (items.length > 0 && isAssetView()) {
                 items.forEach(item => {
@@ -5643,6 +5917,7 @@
         }
 
         async function deleteAssetFromCard(assetId) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             if (!topic || !assetId) return;
             const confirmed = await confirmDialog(
@@ -5650,7 +5925,7 @@
                 '确定删除该词条并取消第二屏原文中的对应标注吗？原文字句会保留。',
                 '删除词条'
             );
-            if (!confirmed) return;
+            if (!confirmed || (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly())) return;
             removeHighlightMarkupForAsset(topic, assetId);
             removeAssetRecord(topic, assetId);
             saveCurrentContent();
@@ -6000,6 +6275,7 @@
         });
 
         function clearHighlight() {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             if (!topic || !lastSelectionRange) return;
             const content = document.getElementById('centerContent');
@@ -6077,6 +6353,7 @@
         }
 
         function markSyntaxSelected(syntaxType) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             if (!syntaxClassMap[syntaxType] || !lastSelectionRange) return;
             const topic = getCurrentTopic();
             if (!topic) return;
@@ -6208,6 +6485,7 @@
         }
 
         function reclassifyExistingHighlight(span, newCategory) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             const assetId = span.dataset.assetId;
             const oldCategory = span.dataset.assetType || getHighlightCategory(span);
@@ -6278,6 +6556,7 @@
         }
 
         function clearSpecificAssetHighlight(topic, assetId) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             if (!topic || !assetId) return;
             const content = document.getElementById('centerContent');
             Array.from(content?.querySelectorAll(highlightSelector) || [])
@@ -6292,6 +6571,7 @@
         }
 
         function classifySelected(category) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             if (!categoryClassMap[category] || !lastSelectionRange) return;
             const topic = getCurrentTopic();
             const content = document.getElementById('centerContent');
@@ -6425,6 +6705,7 @@
             });
         }
         function v108StartLongformInput() {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic=getCurrentTopic();if(!topic||!isTopicView())return;
             if(v108IsLongformTopic(topic)){
                 document.querySelector('#centerContent .source-longform-field')?.focus();return;
@@ -6531,6 +6812,185 @@
             field.scrollIntoView({ behavior:'smooth', block:'center', inline:'nearest' });
         }
 
+        // V125: insert plain bilingual pairs without transplanting source markup or IDs.
+        const v125PairInsertHistory=new Map();
+
+        function v125PairEditSignature(wrap) {
+            return [wrap.querySelector('blockquote')?.innerHTML,wrap.querySelector('p')?.innerHTML].join('\u0000');
+        }
+
+        function v125RememberPairInsertion(context,created) {
+            const root=context.root;
+            if (!root._v125HistoryBound) {
+                root._v125HistoryBound=true;
+                // Native text edits keep their own undo. Do not replay an older insertion over edited cards.
+                root.addEventListener('input',()=>v125PairInsertHistory.delete(getCurrentTopic()?.id));
+                root.addEventListener('beforeinput',event=>v125HandlePairUndo(event));
+            }
+            const id=context.topic.id;
+            if (!v125PairInsertHistory.has(id)) v125PairInsertHistory.set(id,{undo:[],redo:[]});
+            const history=v125PairInsertHistory.get(id);
+            history.undo.push({anchor:context.wrap,parent:context.wrap.parentNode,field:context.field,created,signatures:created.map(entry=>v125PairEditSignature(entry.wrap))});
+            history.undo=history.undo.slice(-20);history.redo=[];
+            if (v125PairInsertHistory.size>16) v125PairInsertHistory.delete(v125PairInsertHistory.keys().next().value);
+        }
+
+        function v125HandlePairUndo(event) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
+            if (event.isComposing || event.keyCode===229 || !isTopicView()) return false;
+            const key=String(event.key || '').toLowerCase();
+            let redo;
+            if (event.inputType==='historyUndo') redo=false;
+            else if (event.inputType==='historyRedo') redo=true;
+            else if ((event.ctrlKey || event.metaKey) && !event.altKey && (key==='z' || key==='y')) redo=key==='y' || event.shiftKey;
+            else return false;
+            const root=document.getElementById('centerContent'),selection=window.getSelection();
+            if (!selection?.rangeCount || !root?.contains(selection.focusNode)) return false;
+            const id=getCurrentTopic()?.id,history=v125PairInsertHistory.get(id),from=redo?history?.redo:history?.undo;
+            const entry=from?.at(-1);
+            if (!entry) return false;
+            if (!root.contains(entry.anchor) || entry.anchor.parentNode!==entry.parent || entry.created.some((item,i)=>v125PairEditSignature(item.wrap)!==entry.signatures[i] || (!redo && item.wrap.parentNode!==entry.parent) || (redo && item.wrap.parentNode))) {
+                v125PairInsertHistory.delete(id);return false;
+            }
+            event.preventDefault();event.stopImmediatePropagation();
+            from.pop();
+            if (redo) {
+                const fragment=document.createDocumentFragment();entry.created.forEach(item=>fragment.appendChild(item.wrap));entry.anchor.after(fragment);history.undo.push(entry);
+            } else { entry.created.forEach(item=>item.wrap.remove());history.redo.push(entry); }
+            applyCenterLangFilter();saveCurrentContent();
+            v45FocusEditableEnd(redo?entry.created.at(-1).zh:entry.field);
+            return true;
+        }
+
+        function v125PlainLines(value) {
+            return String(value || '').replace(/\r\n?/g, '\n').replace(/\u00a0/g, ' ').split('\n').map(line=>line.trim()).filter(Boolean);
+        }
+
+        function v125LineLanguage(text) {
+            if (/\p{Script=Han}/u.test(text)) return 'zh';
+            return /[A-Za-z]/.test(text) ? 'en' : '';
+        }
+
+        function v125PairUnits(units) {
+            const languages = new Set(units.map(unit=>unit.lang).filter(Boolean));
+            if (!languages.has('en') || !languages.has('zh')) return { status:'ordinary' };
+            if (units.length % 2) return { status:'ambiguous' };
+            const pairs=[];
+            for (let i=0; i<units.length; i+=2) {
+                const first=units[i],second=units[i+1];
+                if (!first.text || !second.text || !first.lang || !second.lang || first.lang===second.lang) return { status:'ambiguous' };
+                pairs.push({en:first.lang==='en'?first.text:second.text,zh:first.lang==='zh'?first.text:second.text});
+            }
+            return { status:'pairs',pairs };
+        }
+
+        function v125ClipboardText(node) {
+            const clone=node.cloneNode(true);
+            clone.querySelectorAll('button,script,style,iframe,object,embed,link,meta,.syntax-comment,.source-longform-label').forEach(el=>el.remove());
+            clone.querySelectorAll('br').forEach(el=>el.replaceWith(document.createTextNode('\n')));
+            clone.querySelectorAll('p,div,li').forEach(el=>el.appendChild(document.createTextNode('\n')));
+            return v125PlainLines(clone.textContent).join('\n');
+        }
+
+        function v125ReadBilingualClipboard(clipboard) {
+            const text=clipboard?.getData('text/plain') || '';
+            const html=clipboard?.getData('text/html') || '';
+            if (html) {
+                // Template content stays inert: external HTML is never inserted in the live document.
+                const template=document.createElement('template');template.innerHTML=html;
+                const fragment=template.content;
+                fragment.querySelectorAll('button,script,style,iframe,object,embed,link,meta,.syntax-comment').forEach(el=>el.remove());
+                const fields=[...fragment.querySelectorAll('blockquote,[data-speech-role="body-en"],[data-speech-role="body-zh"],p')]
+                    .filter(el=>!el.parentElement?.closest('blockquote,[data-speech-role="body-en"],[data-speech-role="body-zh"]'));
+                if (fields.some(el=>el.tagName==='BLOCKQUOTE' || el.dataset.speechRole)) {
+                    const units=fields.map(el=>{
+                        const value=v125ClipboardText(el),role=el.dataset.speechRole;
+                        const lang=role==='body-en'?'en':role==='body-zh'?'zh':el.tagName==='BLOCKQUOTE'?'en':v125LineLanguage(value);
+                        return {text:value,lang};
+                    });
+                    // Do not silently discard a copied title, list or unrecognised paragraph.
+                    fields.forEach(el=>el.remove());
+                    const result=v125PairUnits(units);
+                    if (result.status==='pairs') return v125ClipboardText(fragment) ? {status:'ambiguous'} : result;
+                    if (result.status==='ambiguous') return result;
+                }
+            }
+            return v125PairUnits(v125PlainLines(text).map(value=>({text:value,lang:v125LineLanguage(value)})));
+        }
+
+        function v125CurrentPairContext(root=document.getElementById('centerContent')) {
+            const topic=getCurrentTopic();
+            if (!root || !isTopicView() || (!isSpeechStructuredTopic(topic) && !isMarkdownDeleteGroupTopic(topic))) return null;
+            const selection=window.getSelection();
+            if (!selection?.rangeCount || !root.contains(selection.focusNode)) return null;
+            const node=selection.focusNode.nodeType===1?selection.focusNode:selection.focusNode.parentElement;
+            const wrap=node?.closest('.speech-structured-pair,.markdown-delete-pair');
+            if (!wrap || !root.contains(wrap)) return null;
+            const speech=wrap.classList.contains('speech-structured-pair');
+            const en=wrap.querySelector(speech?':scope > [data-speech-role="body-en"]':':scope > blockquote');
+            const zh=wrap.querySelector(speech?':scope > [data-speech-role="body-zh"]':':scope > p');
+            const field=en?.contains(node)?en:zh?.contains(node)?zh:null;
+            return {root,topic,wrap,speech,en,zh,field,node};
+        }
+
+        function v125SetPlainField(field,text) {
+            const lines=String(text).split('\n');
+            field.replaceChildren();
+            lines.forEach((line,index)=>{
+                if (index) field.appendChild(document.createElement('br'));
+                field.appendChild(document.createTextNode(line));
+            });
+        }
+
+        function v125InsertBilingualPairs(context,pairs) {
+            const fragment=document.createDocumentFragment(),created=[];
+            for (const pair of pairs) {
+                let wrap;
+                if (context.speech) {
+                    const holder=document.createElement('template');holder.innerHTML=speechPairHtml();
+                    wrap=holder.content.firstElementChild;
+                } else {
+                    wrap=document.createElement('div');wrap.className='markdown-delete-pair';
+                    wrap.dataset.markdownPairId=makeId('markdown_pair');wrap.contentEditable='true';
+                    wrap.append(document.createElement('blockquote'),document.createElement('p'));
+                }
+                const en=wrap.querySelector('blockquote'),zh=wrap.querySelector('p');
+                v125SetPlainField(en,pair.en);v125SetPlainField(zh,pair.zh);
+                fragment.appendChild(wrap);created.push({wrap,en,zh});
+            }
+            context.wrap.after(fragment);
+            for (const entry of created) {
+                if (context.speech) {
+                    configureSpeechStructuredPair(entry.wrap);
+                    entry.wrap.querySelectorAll('.speech-structured-field').forEach(configureSpeechStructuredField);
+                } else configureMarkdownDeletePair(entry.wrap);
+            }
+            const last=created.at(-1);
+            if (context.speech) speechActivePairId=last.wrap.dataset.speechPairId;
+            else markdownActivePairId=last.wrap.dataset.markdownPairId;
+            v125RememberPairInsertion(context,created);
+            if (centerLangMode!=='bilingual') setCenterLanguageMode('bilingual');
+            applyCenterLangFilter();
+            saveCurrentContent();
+            v45FocusEditableEnd(last.zh);
+        }
+
+        function v125HandlePairPaste(event) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
+            const context=v125CurrentPairContext();
+            if (!context || !context.field) return false;
+            const parsed=v125ReadBilingualClipboard(event.clipboardData);
+            if (parsed.status==='ordinary') return false;
+            event.preventDefault();event.stopImmediatePropagation();
+            if (parsed.status!=='pairs') {
+                showToast('中英文段落未能完整配对，请检查复制范围后重新粘贴');
+                return true;
+            }
+            v125InsertBilingualPairs(context,parsed.pairs);
+            return true;
+        }
+
+
         function configureSpeechStructuredField(field) {
             if (!field || field._speechStructuredReady) return;
             field._speechStructuredReady = true;
@@ -6552,12 +7012,13 @@
                 }, 0);
             });
             field.addEventListener('paste', event => {
+                if (v125HandlePairPaste(event)) return;
                 event.preventDefault();
                 const value = event.clipboardData?.getData('text/plain') || '';
                 document.execCommand('insertText', false, value.replace(/\r\n?/g, '\n'));
             });
             field.addEventListener('keydown', event => {
-                if (event.key !== 'Enter') return;
+                if (event.key !== 'Enter' || event.isComposing || event.keyCode===229) return;
                 if (event.shiftKey) return;
                 event.preventDefault();
                 const role = field.dataset.speechRole || '';
@@ -6652,6 +7113,7 @@
         }
 
         function startSpeechStructuredInput() {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             if (!isStructuredInputTopic(topic)) return false;
             if (isSpeechStructuredTopic(topic)) {
@@ -6716,6 +7178,7 @@
         }
 
         function deleteSpeechStructuredPair(pairId = speechActivePairId) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             const root = document.getElementById('centerContent');
             if (!isSpeechStructuredTopic(topic) || !root) return;
@@ -6908,6 +7371,7 @@
         }
 
         function loadHtmlIntoCurrentTopic(html, successMessage, contentFormat = 'richtext') {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             const content = document.getElementById('centerContent');
             if (!topic || !content) return;
@@ -7927,12 +8391,12 @@
         leftPanelFoldBtn?.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            toggleSidePanel('left');
+            v139PanelAction('left','left');
         });
         rightPanelFoldBtn?.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            toggleSidePanel('right');
+            v139PanelAction('right','right');
         });
 
         function loadSavedPanelLayout() {
@@ -12035,6 +12499,7 @@ function buildSummaryHTML() {
                 el._v108PlainPasteBound=true;
                 el.addEventListener('paste',event=>{
                     if(!isTopicView() || event.defaultPrevented || event.target.closest('.speech-structured-field,.source-longform-field'))return;
+                    if (v125HandlePairPaste(event)) return;
                     event.preventDefault();
                     document.execCommand('insertText',false,(event.clipboardData?.getData('text/plain')||'').replace(/\r\n?/g,'\n'));
                     saveCurrentContent();
@@ -12083,7 +12548,7 @@ function buildSummaryHTML() {
             const isSpeechStructured = isSpeechStructuredTopic(topic);
             const isMarkdown = isSpeechStructured || topic.contentFormat === 'markdown' || (/<blockquote(?:\s|>)/i.test(html) && /<h1(?:\s|>)/i.test(html));
             if (isMarkdown && !isSpeechStructured && topic.contentFormat !== 'markdown') { topic.contentFormat = 'markdown'; saveData(); }
-            el.className = 'center-content source-annotation-v117' + (isMarkdown ? ' markdown-reader' : '') + (isSpeechStructured ? ' speech-structured-reader' : '');
+            el.className = 'center-content source-annotation-v117' + (!v108IsLongformTopic(topic) ? ' v129-editorial' : '') + (isMarkdown ? ' markdown-reader' : '') + (isSpeechStructured ? ' speech-structured-reader' : '');
             if (!html.trim() || html.trim() === '<br>') html = '<div class="empty-placeholder v108-source-choices" contenteditable="false"><button type="button" data-v108-source-choice="upload">上传</button><button type="button" data-v108-source-choice="single">单句输入</button><button type="button" data-v108-source-choice="longform">整段输入</button></div>';
             el.innerHTML = html; el.contentEditable = true;
             if (isSpeechStructured) prepareSpeechStructuredEditor(el, topic);
@@ -12430,7 +12895,7 @@ function buildSummaryHTML() {
             if (!shell) return;
             const active = v96NotesState(topic).active;
             const category = active === 'highFreq' || active === 'phraseStructure' ? active : null;
-            const visibleSteps = active === 'vocabulary' ? ['2'] : category ? ['3'] : ['1','4'];
+            const visibleSteps = active === 'vocabulary' ? ['2'] : category ? ['3'] : ['4'];
             shell.querySelectorAll(':scope > .step-card[data-step]').forEach(step => {
                 step.hidden = !visibleSteps.includes(step.dataset.step);
             });
@@ -12527,7 +12992,7 @@ function buildSummaryHTML() {
             shell.className = 'topic-notes-ui';
             while (rightScroll.firstChild) shell.appendChild(rightScroll.firstChild);
             rightScroll.appendChild(shell);
-            const labels = { step1En:'英文主旨', step1Zh:'中文主旨', step4En:'英文总结', step4Zh:'中文总结' };
+            const labels = { step1En:'英文主旨', step1Zh:'中文主旨', step4En:'英文复述', step4Zh:'中文复述' };
             Object.entries(labels).forEach(([id, text]) => {
                 const editor = shell.querySelector('#' + id);
                 if (!editor) return;
@@ -12592,13 +13057,13 @@ function buildSummaryHTML() {
                 const previous = v97NoteFieldSizes.get(field);
                 const value = field.value;
                 if (previous && previous.value === value && previous.width === width && field.style.height === previous.height) return;
-                changed.push({ field, value, width });
+                changed.push({ field, value, width, min:field.classList.contains('v141-usage-input')?28:36 });
             });
             // Separate write/read/write phases: no per-field forced layout cycle.
-            changed.forEach(({ field }) => {
-                if (field.style.height !== '36px') field.style.height = '36px';
+            changed.forEach(({ field, min }) => {
+                if (field.style.height !== min+'px') field.style.height = min+'px';
             });
-            const heights = changed.map(({ field }) => Math.max(36, field.scrollHeight + 2) + 'px');
+            const heights = changed.map(({ field, min }) => Math.max(min, field.scrollHeight + 2) + 'px');
             changed.forEach((entry, index) => {
                 const height = heights[index];
                 if (entry.field.style.height !== height) entry.field.style.height = height;
@@ -12623,6 +13088,7 @@ function buildSummaryHTML() {
                 if (Math.abs(width - previousWidth) < .5) return;
                 previousWidth = width;
                 v94FitNotesFields();
+                if (typeof v135FitThemeLines === 'function') v135FitThemeLines();
             });
             const viewport = document.getElementById('rightScroll');
             if (viewport) v94NotesWidthObserver.observe(viewport);
@@ -12652,7 +13118,7 @@ function buildSummaryHTML() {
             const oralCount = ['highFreq', 'phraseStructure', 'idiom', 'connector'].reduce((total, category) => total + (topic.steps.assets[category]?.length || 0), 0);
             const card = (step, icon, title, badge, body, count = null) => {
                 const collapsed = uiState.steps[String(step)];
-                const names = { 1:'主旨', 2:'生词', 3:'句式与词组', 4:'我的总结' };
+                const names = { 1:'主旨', 2:'生词', 3:'句式与词组', 4:'我的复述' };
                 return `<div class="step-card${step === 2 || step === 3 ? ' notes-group' : ''} ${collapsed ? 'collapsed' : ''}" data-step="${step}"><div class="step-title" data-step-toggle="${step}" role="button" tabindex="0" aria-expanded="${!collapsed}"><span class="step-label"><span class="notes-step-number">0${step}</span><span class="notes-step-name">${names[step]}</span></span><span class="step-header-meta">${count === null ? '' : `<span class="step-count" data-step-count="${step}">${count} 条</span>`}<span class="step-toggle">${v94NotesIcon('chevron')}</span></span></div><div class="step-body">${body}</div></div>`;
             };
             rightScroll.innerHTML = `<div id="contextPreviewArea" class="hidden"></div>${card(1,'📌','主旨','核心思想',`<div id="step1En" class="pattern-rich-editor topic-note-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="英文内容（主题+观点）">${richHtmlFromValue(topic.steps.step1En || '')}</div><div id="step1Zh" class="pattern-rich-editor topic-note-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="中译（中文翻译）">${richHtmlFromValue(topic.steps.step1Zh || '')}</div>`)}${card(2,'📖','生词','原句 + 中译 + 例句','<div id="vocabularyContainer"></div>',vocabularyCount)}${card(3,'🧩','口语资产','万能句式 · 万能词组 · 生词','<div id="assetContainer"></div>',oralCount)}${card(4,'🗣️','脱稿复述','输出',`<div id="step4En" class="pattern-rich-editor topic-note-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="英文复述内容...">${richHtmlFromValue(topic.steps.step4En || '')}</div><div id="step4Zh" class="pattern-rich-editor topic-note-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="中译（中文翻译）...">${richHtmlFromValue(topic.steps.step4Zh || '')}</div>`)}`;
@@ -12822,6 +13288,39 @@ function buildSummaryHTML() {
             container.appendChild(list); bindAutoResize(container); updateStepEntryCounts(topic); applyRightLangFilter(); scheduleStickyHeaderUpdate(document.getElementById('rightScroll'));
         }
 
+/* Optional per-pattern plain note; never copied into structure or mapped translation. */
+function v141MountUsage(card,item,topic){
+  if(card.querySelector('.v141-usage-input'))return;
+  const structure=card.querySelector('.structure-input'),row=structure?.closest('.item-row'),label=row?.querySelector('label');if(!row||!label)return;
+  const heading=document.createElement('div');heading.className='v141-usage-heading';row.insertBefore(heading,label);heading.appendChild(label);
+  const add=document.createElement('button');add.type='button';add.className='v141-usage-add';add.textContent='＋';add.title='添加用法说明';add.setAttribute('aria-label','添加用法说明');heading.appendChild(add);
+  const body=document.createElement('div');body.className='v141-usage-body';row.appendChild(body);
+  const field=document.createElement('textarea');field.className='notes-plain-input v141-usage-input';field.rows=1;field.wrap='soft';field.placeholder='这个结构怎么用（选填）';field.setAttribute('aria-label','句式用法说明');field.title='用法说明（选填）';field.setAttribute('aria-multiline','true');field.id='v141-usage-'+topic.id+'-'+item.id;field.value=typeof item.usageNote==='string'?item.usageNote:'';body.appendChild(field);add.setAttribute('aria-controls',field.id);
+  const alive=()=>getCurrentTopic()===topic&&field.isConnected&&(topic.steps?.assets?.highFreq||[]).includes(item);
+  function visibility(open){body.hidden=!open;add.hidden=open;add.setAttribute('aria-expanded',String(open));}
+  function commit(){
+    if(!alive())return;
+    const text=String(field.value).replace(/\r\n?/g,'\n');if(field.value!==text)field.value=text;
+    if(item.usageNote!==text&&(text!==''||Object.prototype.hasOwnProperty.call(item,'usageNote'))){item.usageNote=text;saveData();}
+    v94ResizeNoteField(field);
+  }
+  add.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();if(!alive())return;visibility(true);field.focus({preventScroll:true});v94ResizeNoteField(field);});
+  field.addEventListener('focus',()=>{hidePatternRichToolbar();activePatternRichEditor=null;activePatternRichRange=null;});
+  field.addEventListener('input',commit);
+  field.addEventListener('blur',()=>{if(!alive())return;commit();if(!field.value.trim())visibility(false);});
+  field.addEventListener('paste',event=>{
+    event.preventDefault();const text=String(event.clipboardData?.getData('text/plain')||'').replace(/\r\n?/g,'\n');
+    let inserted=false;try{inserted=document.execCommand('insertText',false,text);}catch(_){}
+    if(!inserted)field.setRangeText(text,field.selectionStart,field.selectionEnd,'end');commit();
+  });
+  visibility(Boolean(field.value.trim()));
+}
+
+function v141UsageErrors(pkg){
+  const errors=[];if(!Array.isArray(pkg?.steps?.assets?.highFreq))return errors;
+  pkg.steps.assets.highFreq.forEach((item,index)=>{if(item&&Object.prototype.hasOwnProperty.call(item,'usageNote')&&typeof item.usageNote!=='string')errors.push('句式['+(index+1)+']的 usageNote 用法说明必须是字符串');});return errors;
+}
+
         function renderAssets() {
             if (!isTopicView()) return;
             const topic = getCurrentTopic(), container = document.getElementById('assetContainer');
@@ -12852,7 +13351,7 @@ function buildSummaryHTML() {
                     const card = document.createElement('div'); card.className='asset-item' + ((category.key==='highFreq'||category.key==='phraseStructure')&&!getRichPlainText(item.structure||'').trim()?' structure-missing':''); card.dataset.id=item.id;
                     const coreVerbRow = category.key === 'phraseStructure' ? `<div class="item-row"><label>核心动词</label><input class="core-verb-input" type="text" value="${escapeHtml(item.coreVerb || '')}" placeholder="输入核心动词"></div>` : '';
                     card.innerHTML=`<div class="item-row"><label>原句</label><div class="readonly-original">${escapeHtml(item.original||'(无原文)')}</div></div>${coreVerbRow}${(category.key==='highFreq'||category.key==='phraseStructure')?`<div class="item-row"><label>结构 *</label><div class="pattern-rich-editor topic-note-rich-editor structure-input" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="输入结构">${richHtmlFromValue(item.structure||'')}</div></div>`:''}<div class="item-row" data-zh="true"><label>中译</label><div class="pattern-rich-editor topic-note-rich-editor zh-input${['highFreq','phraseStructure'].includes(category.key)?' vocab-note-editor v111-pattern-note-editor':''}" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="输入中译">${richHtmlFromValue(item.zh||'')}</div></div><div class="topic-example-block"><div class="examples-host"></div></div><button class="entry-delete" type="button" title="删除">x</button>`;
-                    if (compact) v94StyleAssetCard(card, item, index);
+                    if (compact) { v94StyleAssetCard(card, item, index); if(category.key==='highFreq')v141MountUsage(card,item,topic); }
                     const coreVerb = card.querySelector('.core-verb-input');
                     if (coreVerb) coreVerb.addEventListener('input', () => { item.coreVerb = coreVerb.value; saveData(); });
                     const structure = card.querySelector('.structure-input');
@@ -14185,8 +14684,8 @@ function buildSummaryHTML() {
                             ? `<strong>正在连接本地视频…</strong><span>${escapeHtml(sync.video.name || '')}</span>`
                             : '<strong>添加本地视频</strong><span>视频不会复制进应用，只保存本地文件引用。</span><button type="button" data-workplace-relink>选择视频</button>'}
                     </div>
+                    ${workplace ? workplaceMeta : simpleMeta}
                 </div>
-                ${workplace ? workplaceMeta : simpleMeta}
             </div>`;
             if (workplace) {
                 host.querySelector('[data-workplace-toggle="follow"]')?.addEventListener('click', () => {
@@ -16164,6 +16663,7 @@ function buildSummaryHTML() {
         }
 
         function deleteMarkdownPair(pairId = markdownActivePairId) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             const topic = getCurrentTopic();
             const root = document.getElementById('centerContent');
             if (!isMarkdownDeleteGroupTopic(topic) || !root) return;
@@ -17378,6 +17878,7 @@ function buildSummaryHTML() {
         // 3) 原文 Enter 统一：英文 Enter 只进入中文；中文 Enter 永远在当前位置后插入一整组英文+中文。
         function v45FocusEditableEnd(field) {
             if (!field) return;
+            if (field.closest?.('.markdown-delete-pair')) { v71FocusMarkdownField(field); return; }
             if (typeof focusSpeechField === 'function' && field.matches('.speech-structured-field')) {
                 focusSpeechField(field);
                 return;
@@ -17393,6 +17894,7 @@ function buildSummaryHTML() {
         }
 
         function v45InsertMarkdownPairAfter(pairWrap) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             if (!pairWrap?.parentNode) return null;
             const newWrap = document.createElement('div');
             newWrap.className = 'markdown-delete-pair';
@@ -17412,8 +17914,11 @@ function buildSummaryHTML() {
         }
 
         document.getElementById('centerContent')?.addEventListener('keydown', event => {
-            if (event.key !== 'Enter' || event.shiftKey) return;
-            const target = event.target instanceof Element ? event.target : null;
+            if (v125HandlePairUndo(event)) return;
+            if (event.key !== 'Enter' || event.shiftKey || event.isComposing || event.keyCode===229) return;
+            v125PairInsertHistory.delete(getCurrentTopic()?.id);
+            const context = v125CurrentPairContext();
+            const target = context?.field || (event.target instanceof Element ? event.target : null);
             if (!target) return;
 
             // 自己输入：正文英文 -> 当前中文；正文中文 -> 当前组后插入新组。
@@ -19354,6 +19859,7 @@ function buildSummaryHTML() {
         }
 
         function v71CreateMarkdownPairAfter(currentWrap) {
+            if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
             if (!currentWrap?.parentNode) return null;
             const pairId = makeId('markdown_pair');
             const wrap = document.createElement('div');
@@ -19376,40 +19882,8 @@ function buildSummaryHTML() {
             return { wrap, en, zh };
         }
 
-        // Markdown 上传后的正文此前由外层 centerContent 接管编辑，event.target 不一定是实际中文 p。
-        // 这里使用 Selection 的真实光标位置判定当前是英文还是中文，行为与“自己输入”保持一致：
-        // 英文 Enter -> 中文；最后一组中文 Enter -> 新增一整组英文 + 中文；Shift+Enter 保留组内换行。
-        document.addEventListener('keydown', event => {
-            if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
-            const topic = getCurrentTopic();
-            if (!isMarkdownDeleteGroupTopic(topic)) return;
-            const located = v71GetMarkdownCaretField(event);
-            if (!located) return;
-
-            const { pair, field } = located;
-            if (field.tagName === 'BLOCKQUOTE') {
-                const zh = pair.querySelector(':scope > p');
-                if (!zh) return;
-                event.preventDefault();
-                v71FocusMarkdownField(zh);
-                return;
-            }
-            if (field.tagName !== 'P') return;
-
-            event.preventDefault();
-            const nextWrap = pair.nextElementSibling?.matches?.('.markdown-delete-pair') ? pair.nextElementSibling : null;
-            const nextEn = nextWrap?.querySelector(':scope > blockquote') || null;
-            if (nextEn) {
-                v71FocusMarkdownField(nextEn);
-                return;
-            }
-            const created = v71CreateMarkdownPairAfter(pair);
-            if (!created) return;
-            requestAnimationFrame(() => {
-                // 正常“中英”/“英文”视图进入新英文；中文-only 模式则聚焦新中文，避免焦点落在隐藏元素。
-                v71FocusMarkdownField(centerLangMode === 'zh' ? created.zh : created.en);
-            });
-        }, true);
+        // V126: MD Enter is handled once by the centerContent capture listener (V125).
+        // A document capture handler would run first and move the caret before that handler.
 
         console.log('✅ v71：挖空测练扩展到全部原文 topic；Markdown 上传原文的 Enter 行为与自己输入统一。');
 
@@ -20094,6 +20568,7 @@ function buildSummaryHTML() {
             }
 
             function v75StartAdjust(assetId) {
+                if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
                 const topic = getCurrentTopic();
                 const found = topic ? findAssetById(topic, assetId) : null;
                 if (!topic || !found) {
@@ -20115,6 +20590,7 @@ function buildSummaryHTML() {
             }
 
             function v75ConfirmAdjust() {
+                if (typeof v137IsSourceReadOnly === 'function' && v137IsSourceReadOnly()) return;
                 if (!adjustState || !lastSelectionRange) {
                     showToast('请先重新框选新的范围');
                     return;
@@ -21826,19 +22302,34 @@ function buildSummaryHTML() {
     const style = document.createElement('style');
     style.id = 'hiGeniusV87Style';
     style.textContent = `
-        /* 三屏顶部工具栏统一最小高度，避免标题栏上下错位；允许窄屏自动增高，避免控件被裁切 */
-        #leftPanel .brand-slogan {
-            min-height:64px !important;
-            height:64px !important;
+        /* V128: one fixed-height top row in all three application panels. */
+        #app { --v128-topbar-height:48px; }
+        #app #leftPanel > .brand-slogan,
+        #app #centerPanel > .center-toolbar,
+        #app #rightPanel > .right-toolbar {
+            min-height:var(--v128-topbar-height) !important;
+            height:var(--v128-topbar-height) !important;
+            max-height:var(--v128-topbar-height) !important;
+            flex:0 0 var(--v128-topbar-height) !important;
             box-sizing:border-box !important;
+            padding-top:0 !important; padding-bottom:0 !important;
+            align-items:center !important; align-content:center !important;
         }
-        #centerPanel > .center-toolbar,
-        #rightPanel > .right-toolbar {
-            min-height:64px !important;
-            height:auto !important;
-            box-sizing:border-box !important;
-            align-items:center !important;
-            align-content:center !important;
+        #app #centerPanel > .center-toolbar,
+        #app #rightPanel > .right-toolbar {
+            flex-wrap:nowrap !important; overflow-x:auto; overflow-y:hidden;
+            scrollbar-width:none;
+        }
+        #app #centerPanel > .center-toolbar::-webkit-scrollbar,
+        #app #rightPanel > .right-toolbar::-webkit-scrollbar { display:none; }
+        #app #centerPanel > .center-toolbar :is(.file-actions,.daily-note-actions,.asset-search,.lang-filter),
+        #app #rightPanel > .right-toolbar > .lang-filter {
+            flex-shrink:0 !important; flex-wrap:nowrap !important;
+            width:auto !important; margin-top:0; margin-bottom:0;
+        }
+        #app > .panel-fold-divider > .panel-fold-toggle { top:calc(var(--v128-topbar-height) - 2px); }
+        @media (max-width:760px) {
+            #app > .panel-fold-divider > .panel-fold-toggle { top:calc(var(--v128-topbar-height) - 4px); }
         }
 
         /* 左侧大分类外框略微增高 */
@@ -22578,11 +23069,572 @@ function buildSummaryHTML() {
 })();
 
 </script>
+<script id="v133ThemeFeature">/* Optional corner field, outside the vertically centered five-field content group. */
+function v142MountThemeYear(slot,topic,state){
+  const field=document.createElement('input');field.type='text';field.inputMode='numeric';field.className='v142-theme-year';field.placeholder='年份';field.title='内容年份（例如 2005，可留空）';field.setAttribute('aria-label','内容年份');field.setAttribute('data-theme-key','year');field.value=typeof state.draft.year==='string'?state.draft.year:'';const card=slot.querySelector('.v133-theme-card');card.insertBefore(field,card.firstChild);
+  const commit=()=>{
+    if(state.topic!==topic||getCurrentTopic()!==topic||!field.isConnected)return;
+    const value=v135OneLine(field.value);if(value!==field.value)field.value=value;
+    if(topic.sourceTheme?.year!==value&&(value!==''||Object.prototype.hasOwnProperty.call(topic.sourceTheme||{},'year'))){topic.sourceTheme={...(topic.sourceTheme||{}),...v133ReadTheme(topic),year:value};state.draft=v133ReadTheme(topic);saveData();}
+  };
+  field.addEventListener('focus',()=>{hidePatternRichToolbar();activePatternRichEditor=null;activePatternRichRange=null;});
+  field.addEventListener('input',commit);field.addEventListener('blur',commit);
+  field.addEventListener('paste',event=>{event.preventDefault();const value=v135OneLine(event.clipboardData?.getData('text/plain')||'');let inserted=false;try{inserted=document.execCommand('insertText',false,value);}catch(_){}if(!inserted)field.setRangeText(value,field.selectionStart,field.selectionEnd,'end');commit();});
+  field.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing&&event.keyCode!==229){event.preventDefault();event.stopPropagation();commit();field.blur();}});
+}
 
+/* Four theme lines and optional multiline background; unedited legacy HTML is retained. */
+const V135_THEME_KEYS=['tagline','label','zh','en','background'];
+let v135ThemeFitFrame=0;
+const v135ThemeSizes=new WeakMap();
+function v135OneLine(value){return String(value||'').replace(/[\r\n\u2028\u2029]+/g,' ');}
+function v140ThemeBackgroundText(value){return String(value??'').replace(/\r\n?/g,'\n').replace(/[\u2028\u2029]/g,'\n');}
+function v135ThemeDisplay(value,key){
+  if(key==='background')return typeof value.background==='string'?v140ThemeBackgroundText(value.background):'';
+  if(key==='tagline')return typeof value.tagline==='string'?v135OneLine(value.tagline):'锻炼口语丨每日跟读';
+  if(key==='label')return typeof value.label==='string'?v135OneLine(value.label):'主题：';
+  return v135OneLine(getRichPlainText(value[key]||''));
+}
+function v135CancelThemeFit(){if(v135ThemeFitFrame)cancelAnimationFrame(v135ThemeFitFrame);v135ThemeFitFrame=0;}
+function v135FitThemeLines(){
+  if(v135ThemeFitFrame)return;
+  v135ThemeFitFrame=requestAnimationFrame(()=>{
+    v135ThemeFitFrame=0;const slot=document.getElementById('v133ThemeSlot');if(!slot||slot.hidden)return;
+    const changed=[];
+    slot.querySelectorAll('.v135-theme-line').forEach(field=>{
+      if(!field.isConnected||!field.getClientRects().length||field.clientWidth<=0)return;
+      const old=v135ThemeSizes.get(field),width=field.clientWidth;
+      if(old&&old.width===width&&old.value===field.value&&old.height===field.style.height)return;
+      const line=parseFloat(getComputedStyle(field).lineHeight)||20;changed.push({field,width,value:field.value,line});
+    });
+    changed.forEach(({field})=>{field.style.height='0px';});
+    const heights=changed.map(({field,line})=>Math.max(line,field.scrollHeight)+'px');
+    changed.forEach((entry,i)=>{entry.field.style.height=heights[i];v135ThemeSizes.set(entry.field,{width:entry.width,value:entry.value,height:heights[i]});});
+  });
+}
+function v135MountThemeLines(slot,topic,state,schedule){
+  slot.innerHTML='<section class="v133-theme-card v135-theme-template" aria-label="本篇主题"><div class="v136-theme-content"></div></section>';
+  const card=slot.querySelector('.v136-theme-content'),labels={tagline:'主题引导语',label:'主题标签',zh:'具体主题',en:'主题英译',background:'背景介绍'};
+  const fields=V135_THEME_KEYS.map(key=>{
+    const field=document.createElement('textarea');field.className='v135-theme-line v135-theme-'+key;field.rows=1;field.wrap='soft';
+    field.setAttribute('aria-label',labels[key]);field.setAttribute('aria-multiline',String(key==='background'));field.setAttribute('data-theme-key',key);
+    field.placeholder=key==='background'?'填写背景介绍（选填）':key==='zh'?'填写具体主题':key==='en'?'填写主题英译':'';
+    field.value=v135ThemeDisplay(state.draft,key);card.appendChild(field);
+    const commit=()=>{
+      if(state.topic!==topic||getCurrentTopic()!==topic||!field.isConnected)return;
+      const text=key==='background'?v140ThemeBackgroundText(field.value):v135OneLine(field.value);if(field.value!==text)field.value=text;
+      const stored=key==='zh'||key==='en'?(text?'<div>'+escapeHtml(text)+'</div>':''):text;
+      if(topic.sourceTheme?.[key]!==stored){
+        topic.sourceTheme={...(topic.sourceTheme||{}),...v133ReadTheme(topic),[key]:stored};
+        state.draft=v133ReadTheme(topic);saveData();
+      }
+      v135FitThemeLines();schedule();
+    };
+    field.addEventListener('focus',()=>{hidePatternRichToolbar();activePatternRichEditor=null;activePatternRichRange=null;});
+    field.addEventListener('input',commit);
+    field.addEventListener('paste',event=>{
+      event.preventDefault();const raw=event.clipboardData?.getData('text/plain')||'',text=key==='background'?v140ThemeBackgroundText(raw):v135OneLine(raw);
+      // Use the application's existing insertText path for native undo where supported.
+      let inserted=false;try{inserted=document.execCommand('insertText',false,text);}catch(_){}
+      if(!inserted)field.setRangeText(text,field.selectionStart,field.selectionEnd,'end');
+      commit();
+    });
+    field.addEventListener('keydown',event=>{
+      if((event.ctrlKey||event.metaKey)&&['b','i','u'].includes(event.key.toLowerCase())){event.preventDefault();event.stopPropagation();return;}
+      if(key==='background'||event.key!=='Enter'||event.isComposing||event.keyCode===229)return;
+      event.preventDefault();event.stopPropagation();const next=fields[V135_THEME_KEYS.indexOf(key)+1];next?.focus();
+    });
+    return field;
+  });
+  v142MountThemeYear(slot,topic,state);
+  v135FitThemeLines();
+}
+
+/* V133 optional per-topic theme, with no startup migration or source DOM rewrite. */
+function v133ReadTheme(topic) {
+  const value=topic?.sourceTheme;
+  const result={zh:typeof value?.zh==='string'?value.zh:'',en:typeof value?.en==='string'?value.en:''};
+  for(const key of ['tagline','label','background','year'])if(typeof value?.[key]==='string')result[key]=value[key];
+  return result;
+}
+function v133ThemeShape(value) {
+  return Boolean(value && typeof value==='object' && !Array.isArray(value) && typeof value.zh==='string' && typeof value.en==='string' && ['tagline','label','background','year'].every(key=>!Object.prototype.hasOwnProperty.call(value,key)||typeof value[key]==='string'));
+}
+function v133CleanTheme(value) {
+  const result={zh:normalizeRichEditorHtml(richHtmlFromValue(value.zh)),en:normalizeRichEditorHtml(richHtmlFromValue(value.en))};
+  for(const key of ['tagline','label','background','year'])if(typeof value[key]==='string')result[key]=value[key];
+  return result;
+}
+(() => {
+  const exportBase=buildCurrentLearningPackage;
+  buildCurrentLearningPackage=function(...args){
+    const pkg=exportBase.apply(this,args),topic=getCurrentTopic();
+    if(topic && Object.prototype.hasOwnProperty.call(topic,'sourceTheme'))pkg.sourceTheme=v133ReadTheme(topic);
+    if(pkg.aiInstructions?.rules){
+      pkg.aiInstructions.rules=pkg.aiInstructions.rules.map(rule=>rule==='可以完善 steps.step1En、step1Zh、step4En、step4Zh，以及各 asset 内的第三屏笔记字段。'
+        ?'可以完善 steps.step4En、step4Zh（我的复述）及各 asset 内的第三屏笔记字段；step1En、step1Zh 为历史主旨，保持原样':rule);
+      pkg.aiInstructions.rules.push('sourceTheme 是用户填写的主题及背景介绍，zh/en 及可选 tagline/label/background/year 均原样保留，不自动补写或修改');
+    }
+    return pkg;
+  };
+  const validateBase=validateLearningPackage;
+  validateLearningPackage=function(parsed){
+    const result=validateBase.apply(this,arguments);
+    if(result.errors?.length)return result;
+    if(Object.prototype.hasOwnProperty.call(parsed,'sourceTheme')){
+      if(!v133ThemeShape(parsed.sourceTheme))return {errors:['sourceTheme 的 zh/en 及已提供的 tagline/label/background/year 必须是字符串，学习包未写入']};
+      result.package.sourceTheme=v133ReadTheme({sourceTheme:parsed.sourceTheme});
+    }
+    return result;
+  };
+  const applyBase=applyLearningPackage;
+  applyLearningPackage=function(pkg,resolved){
+    const hasTheme=Object.prototype.hasOwnProperty.call(pkg,'sourceTheme');
+    if(hasTheme&&!v133ThemeShape(pkg.sourceTheme))throw new Error('主题字段格式无效，学习包未写入');
+    // Finish all new-field validation and cleaning before the existing transactional importer mutates anything.
+    const theme=hasTheme?v133CleanTheme(pkg.sourceTheme):null;
+    const topic=applyBase.apply(this,arguments);
+    if(hasTheme){
+      for(const key of ['tagline','label','background','year'])if(!Object.prototype.hasOwnProperty.call(theme,key)&&typeof topic.sourceTheme?.[key]==='string')theme[key]=topic.sourceTheme[key];
+      topic.sourceTheme=theme;
+    }
+    return topic;
+  };
+
+  const panel=document.getElementById('rightPanel'),scroll=document.getElementById('rightScroll');
+  const slot=document.getElementById('v133ThemeSlot'),title=document.getElementById('v133NotesTitle');
+  if(!panel||!scroll||!slot||!title)return;
+  const state={topic:null,draft:null,card:null,observer:null,frame:0,listening:false};
+  const active=()=>Boolean(isTopicView()&&getCurrentTopic()&&document.getElementById('centerContent')?.classList.contains('source-annotation-v117')&&scroll.querySelector(':scope > .topic-notes-ui'));
+  const write=(property,value)=>{if(slot.style.getPropertyValue(property)!==value)slot.style.setProperty(property,value);};
+  function measure(){
+    state.frame=0;if(!active())return;
+    if(window.v137SharedHeight){window.v137SharedHeight.sync();v135FitThemeLines();return;}
+    const card=state.card,toolbar=panel.querySelector(':scope > .right-toolbar');
+    const visible=card&&card.isConnected&&card.getClientRects().length;
+    // Read geometry first; the video never depends on this slot's height.
+    const rect=visible?card.getBoundingClientRect():null,bar=visible&&toolbar?toolbar.getBoundingClientRect():null;
+    if(rect&&rect.height>0&&bar){
+      if(slot.dataset.aligned!=='true')slot.dataset.aligned='true';
+      write('margin-top',Math.max(0,rect.top-bar.bottom)+'px');write('height',rect.height+'px');
+    }else{
+      if(slot.dataset.aligned!=='false')slot.dataset.aligned='false';
+      write('margin-top','6px');write('height','auto');
+    }
+    v135FitThemeLines();
+  }
+  function schedule(){if(active()&&!state.frame)state.frame=requestAnimationFrame(measure);}
+  function observeCard(){
+    const card=document.querySelector('#workplaceMediaHost .workplace-video-card');
+    if(card!==state.card){
+      state.observer?.disconnect();state.card?.removeEventListener('loadedmetadata',schedule,true);
+      state.card=card;
+      if(card){
+        if(typeof ResizeObserver==='function'){state.observer ||= new ResizeObserver(schedule);state.observer.observe(card);}
+        else card.addEventListener('loadedmetadata',schedule,true);
+      }
+    }
+    if(!state.listening){window.addEventListener('resize',schedule,{passive:true});state.listening=true;}
+    schedule();
+  }
+  function release(){
+    state.observer?.disconnect();state.card?.removeEventListener('loadedmetadata',schedule,true);state.card=null;
+    if(state.listening)window.removeEventListener('resize',schedule);state.listening=false;
+    if(state.frame)cancelAnimationFrame(state.frame);state.frame=0;
+    v135CancelThemeFit();state.topic=state.draft=null;slot.hidden=true;title.hidden=true;panel.classList.remove('v133-source-notes');
+    if(activePatternRichEditor&&slot.contains(activePatternRichEditor)){hidePatternRichToolbar();activePatternRichEditor=null;}
+  }
+  function sync(){
+    if(!active()){release();return;}
+    const topic=getCurrentTopic(),value=v133ReadTheme(topic);
+    panel.classList.add('v133-source-notes');slot.hidden=false;title.hidden=false;
+    if(state.topic!==topic||!state.draft||V135_THEME_KEYS.some(key=>value[key]!==state.draft[key])){
+      if(activePatternRichEditor&&slot.contains(activePatternRichEditor)){hidePatternRichToolbar();activePatternRichEditor=null;}
+      state.topic=topic;state.draft={...value};
+      v135MountThemeLines(slot,topic,state,schedule);
+    }
+    observeCard();
+  }
+  const renderRightBase=renderRightPanel;
+  renderRightPanel=function(...args){const result=renderRightBase.apply(this,args);sync();return result;};
+  const renderSourceBase=renderContent;
+  renderContent=function(...args){const result=renderSourceBase.apply(this,args);if(!active())release();else observeCard();return result;};
+  const mediaBase=renderWorkplaceMediaPanel;
+  renderWorkplaceMediaPanel=function(...args){const result=mediaBase.apply(this,args);if(active())observeCard();return result;};
+  sync();
+})();
+
+</script>
+<script id="v134VideoHeight">
+/* Shared display height: hidden panes never constrain visible panes. */
+(() => {
+  const host=document.getElementById('workplaceMediaHost'),slot=document.getElementById('v133ThemeSlot'),app=document.getElementById('app');
+  if(!host||!slot||!app)return;
+  const KEY='hi_genius_video_height_v1',MIN=118;
+  let preferred=null,lastHeight=null,frame=0,drag=null,storageWarned=false;
+  try{const raw=localStorage.getItem(KEY),n=Number(raw);if(raw!==null&&Number.isFinite(n)&&n>=MIN)preferred=n;}catch(_){}
+  const handles=new Map();let card=null,listening=false;
+  const ordinary=()=>Boolean(isTopicView()&&document.getElementById('centerContent')?.classList.contains('source-annotation-v117'));
+  function visible(node){
+    if(!node||node.hidden||!node.isConnected||!node.getClientRects().length||getComputedStyle(node).visibility==='hidden')return false;
+    const r=node.getBoundingClientRect(),a=app.getBoundingClientRect(),v={left:Math.max(0,a.left),top:Math.max(0,a.top),right:Math.min(window.innerWidth||a.right,a.right),bottom:Math.min(window.innerHeight||a.bottom,a.bottom)};
+    if(node.id==='rightPanel'&&app.classList.contains('right-panel-collapsed'))return false;
+    return r.width>1&&r.height>1&&r.right>v.left&&r.left<v.right&&r.bottom>v.top&&r.top<v.bottom;
+  }
+  function bounds(){
+    const available=[];
+    for(const id of ['centerPanel','rightPanel']){
+      const pane=document.getElementById(id);if(!visible(pane))continue;
+      const toolbar=pane.querySelector(id==='centerPanel'?':scope > .center-toolbar':':scope > .right-toolbar');
+      const tabs=id==='rightPanel'?document.getElementById('notesPageTabs'):null;
+      available.push(pane.getBoundingClientRect().height-(toolbar?.getBoundingClientRect().height||48)-(visible(tabs)?tabs.getBoundingClientRect().height:0));
+    }
+    const space=available.length?Math.min(...available):MIN+188;
+    return {min:MIN,max:Math.max(MIN,Math.floor(Math.min(space*.65,space-188)))};
+  }
+  const clamp=(n,b)=>Math.max(b.min,Math.min(b.max,n));
+  function persist(){try{if(preferred===null)localStorage.removeItem(KEY);else localStorage.setItem(KEY,String(preferred));}catch(_){if(!storageWarned){storageWarned=true;showToast('高度已调整，浏览器未能记住显示偏好');}}}
+  const style=(node,key,value)=>{if(node&&node.style.getPropertyValue(key)!==value)node.style.setProperty(key,value);};
+  function apply(){
+    frame=0;if(!ordinary())return;
+    const b=bounds(),desired=drag?drag.value:preferred,videoVisible=visible(card)&&visible(document.getElementById('centerPanel'));
+    let height=desired!==null?clamp(desired,b):null;
+    if(card){
+      card.classList.add('v134-height-enabled');style(card,'--v134-height-limit',b.max+'px');
+      if(height!==null){card.classList.add('v134-custom-height');style(card,'--v134-video-height',height+'px');}
+      else {card.classList.remove('v134-custom-height');card.style.removeProperty('--v134-video-height');}
+    }
+    if(height===null){
+      const measured=videoVisible?card.querySelector('.workplace-video-shell')?.getBoundingClientRect().height:0;
+      height=clamp(measured>0?measured:lastHeight??MIN,b);
+    }
+    if(!drag)lastHeight=height;
+    if(visible(slot)){
+      const toolbar=document.querySelector('#rightPanel > .right-toolbar');
+      const c=videoVisible?card.getBoundingClientRect():null;
+      const border=card?(parseFloat(getComputedStyle(card).borderTopWidth)||1)+(parseFloat(getComputedStyle(card).borderBottomWidth)||1):2;
+      const top=c&&toolbar?Math.max(0,c.top-toolbar.getBoundingClientRect().bottom):6;
+      slot.dataset.aligned='true';style(slot,'margin-top',top+'px');style(slot,'height',(height+border)+'px');
+    }
+    for(const handle of handles.values())for(const[k,v]of Object.entries({'aria-valuemin':MIN,'aria-valuemax':b.max,'aria-valuenow':Math.round(height),'aria-valuetext':Math.round(height)+'像素'}))if(handle.getAttribute(k)!==String(v))handle.setAttribute(k,String(v));
+    v135FitThemeLines();
+  }
+  function schedule(){if(!frame&&ordinary())frame=requestAnimationFrame(apply);}
+  function finish(commit){
+    const d=drag;if(!d)return;drag=null;d.handle.classList.remove('is-dragging');
+    try{d.handle.releasePointerCapture(d.id);}catch(_){}
+    if(commit&&d.moved){preferred=d.value;persist();}
+    if(frame)cancelAnimationFrame(frame);frame=0;apply();
+  }
+  function reset(){finish(false);preferred=lastHeight=null;persist();apply();}
+  function addHandle(kind,parent){
+    let handle=handles.get(kind);if(handle?.isConnected)return;
+    handle=document.createElement('div');handle.className='v137-height-grip'+(kind==='video'?' v134-video-resizer':' v137-theme-resizer');handle.tabIndex=0;
+    handle.setAttribute('role','separator');handle.setAttribute('aria-orientation','horizontal');handle.setAttribute('aria-label','调整视频和主题区高度');handle.title='上下拖动调整高度；双击或按Enter恢复默认';parent.after(handle);handles.set(kind,handle);
+    handle.addEventListener('pointerdown',e=>{
+      if(drag||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();e.stopPropagation();handle.focus({preventScroll:true});
+      const start=preferred===null?lastHeight??MIN:clamp(preferred,bounds());drag={handle,id:e.pointerId,y:e.clientY,start,value:start,bounds:bounds(),moved:false};handle.classList.add('is-dragging');try{handle.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    handle.addEventListener('pointermove',e=>{if(!drag||drag.handle!==handle||e.pointerId!==drag.id)return;e.preventDefault();e.stopPropagation();drag.value=clamp(drag.start+e.clientY-drag.y,drag.bounds);drag.moved ||= Math.abs(e.clientY-drag.y)>1;schedule();});
+    handle.addEventListener('pointerup',e=>{if(drag?.handle===handle&&drag.id===e.pointerId){e.preventDefault();e.stopPropagation();finish(true);}});
+    for(const name of ['pointercancel','lostpointercapture'])handle.addEventListener(name,e=>{if(drag?.handle===handle&&drag.id===e.pointerId)finish(false);});
+    handle.addEventListener('dblclick',e=>{e.preventDefault();e.stopPropagation();reset();});handle.addEventListener('focus',schedule);
+    handle.addEventListener('keydown',e=>{
+      if(e.key==='Escape'&&drag){e.preventDefault();finish(false);return;}if(e.key==='Enter'){e.preventDefault();reset();return;}
+      if(!['ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();e.stopPropagation();const b=bounds(),n=preferred===null?lastHeight??MIN:clamp(preferred,b);
+      preferred=e.key==='Home'?b.min:e.key==='End'?b.max:clamp(n+(e.key==='ArrowUp'?-1:1)*(e.shiftKey?24:8),b);schedule();
+    });
+    handle.addEventListener('keyup',e=>{if(['ArrowUp','ArrowDown','Home','End'].includes(e.key))persist();});
+  }
+  function dropHandle(kind){const h=handles.get(kind);if(drag?.handle===h)finish(false);h?.remove();handles.delete(kind);}
+  function sync(){
+    if(!ordinary()){
+      for(const kind of [...handles.keys()])dropHandle(kind);if(frame)cancelAnimationFrame(frame);frame=0;
+      if(listening){window.removeEventListener('resize',schedule);host.removeEventListener('loadedmetadata',schedule,true);}listening=false;
+      document.getElementById('rightPanel')?.classList.remove('v137-theme-height-control');return;
+    }
+    const next=host.querySelector('.workplace-video-card');if(next!==card){dropHandle('video');card=next;}
+    if(card?.querySelector('video')&&visible(document.getElementById('centerPanel')))addHandle('video',card);else dropHandle('video');
+    const theme=visible(slot)&&document.getElementById('rightScroll')?.querySelector(':scope > .topic-notes-ui');
+    if(theme)addHandle('theme',slot);else dropHandle('theme');
+    document.getElementById('rightPanel')?.classList.toggle('v137-theme-height-control',Boolean(theme));
+    if(!listening){window.addEventListener('resize',schedule,{passive:true});host.addEventListener('loadedmetadata',schedule,true);listening=true;}schedule();
+  }
+  window.v137SharedHeight={sync};
+  for(const name of ['renderWorkplaceMediaPanel','renderContent','renderRightPanel','applyPanelWidths']){
+    const base=window[name];if(typeof base!=='function')continue;
+    window[name]=function(...args){const result=base.apply(this,args);sync();return result;};
+  }
+  sync();
+})();
+
+</script>
+<script id="v137MediaControls">
+/* In-page native-control visibility. Fullscreen system UI remains browser-owned. */
+(() => {
+  const host=document.getElementById('workplaceMediaHost');if(!host)return;
+  let video=null,shell=null,timer=0,busy=false,pressed=false,shown=false,wakeClick=false;
+  const clear=()=>{clearTimeout(timer);timer=0;};
+  function hide(){clear();shown=false;shell?.classList.remove('v137-media-ui-visible');if(video&&!video.paused&&!video.ended&&!busy&&!pressed)video.controls=false;}
+  function arm(){clear();if(!busy&&!pressed)timer=setTimeout(hide,2000);}
+  function show(){if(!video)return;shown=true;shell.classList.add('v137-media-ui-visible');video.controls=true;arm();}
+  const onPlay=()=>{if(shown)arm();else hide();};
+  const onPause=()=>{clear();if(video)video.controls=true;if(shown)arm();};
+  const onSeek=()=>{busy=true;clear();if(video)video.controls=true;};
+  const onSeekEnd=()=>{busy=false;if(shown)arm();else if(video?.paused)video.controls=true;else hide();};
+  const onDown=e=>{const wake=video&&!video.paused&&!shown;wakeClick=Boolean(wake&&e.target===video);pressed=true;show();clear();if(wakeClick){e.preventDefault();e.stopPropagation();}};
+  const onClick=e=>{if(wakeClick&&e.target===video){wakeClick=false;e.preventDefault();e.stopImmediatePropagation();}};
+  const onUp=()=>{pressed=false;if(shown)arm();};
+  const onLeave=()=>{if(!busy&&!pressed)hide();};
+  function cleanup(){
+    clear();if(video){for(const[n,fn]of [['play',onPlay],['pause',onPause],['ended',onPause],['seeking',onSeek],['seeked',onSeekEnd],['volumechange',show]])video.removeEventListener(n,fn);video.controls=true;}
+    if(shell){for(const[n,fn]of [['pointerenter',show],['pointermove',show],['pointerdown',onDown],['pointerleave',onLeave],['focusin',show],['keydown',show]])shell.removeEventListener(n,fn);shell.classList.remove('v137-media-ui-visible','v137-managed-media');}
+    shell?.removeEventListener('click',onClick,true);document.removeEventListener('pointerup',onUp,true);document.removeEventListener('pointercancel',onUp,true);video=shell=null;busy=pressed=shown=wakeClick=false;
+  }
+  function sync(){
+    const next=host.querySelector('video');if(next===video)return;cleanup();if(!next)return;
+    video=next;shell=video.closest('.workplace-video-shell');if(!shell){video=null;return;}shell.classList.add('v137-managed-media');
+    for(const[n,fn]of [['play',onPlay],['pause',onPause],['ended',onPause],['seeking',onSeek],['seeked',onSeekEnd],['volumechange',show]])video.addEventListener(n,fn);
+    for(const[n,fn]of [['pointerenter',show],['pointermove',show],['pointerdown',onDown],['pointerleave',onLeave],['focusin',show],['keydown',show]])shell.addEventListener(n,fn);
+    shell.addEventListener('click',onClick,true);document.addEventListener('pointerup',onUp,true);document.addEventListener('pointercancel',onUp,true);video.controls=Boolean(video.paused||video.ended);
+  }
+  const media=renderWorkplaceMediaPanel;renderWorkplaceMediaPanel=function(...args){const result=media.apply(this,args);sync();return result;};sync();
+})();
+
+</script>
+<script id="v137ReadOnly">
+function v137IsSourceReadOnly(){return Boolean(window.v137ReaderMode?.active());}
+(() => {
+  const root=document.getElementById('centerContent'),host=document.getElementById('workplaceMediaHost');if(!root||!host)return;
+  let enabled=true;const locks=new Map();
+  const ordinary=()=>Boolean(isTopicView()&&getCurrentTopic()&&root.classList.contains('source-annotation-v117'));
+  const active=()=>enabled&&ordinary();window.v137ReaderMode={active};
+  const overlay=document.createElement('div');overlay.className='v137-reader-overlay';overlay.hidden=true;host.after(overlay);
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='v137-reader-toggle';overlay.appendChild(toggle);
+  function record(node,kind){if(!locks.has(node))locks.set(node,{kind,editable:node.getAttribute('contenteditable'),readonly:node.readOnly,disabled:node.disabled,aria:node.getAttribute('aria-readonly'),ariaDisabled:node.getAttribute('aria-disabled')});}
+  function attr(node,name,value){if(value===null)node.removeAttribute(name);else node.setAttribute(name,value);}
+  function restore(){
+    for(const[node,s]of locks){if(s.kind==='editable'){attr(node,'contenteditable',s.editable);attr(node,'aria-readonly',s.aria);}else if(s.kind==='input')node.readOnly=s.readonly;else if(s.kind==='button'){node.disabled=s.disabled;attr(node,'aria-disabled',s.ariaDisabled);}else attr(node,'aria-disabled',s.ariaDisabled);}locks.clear();
+  }
+  function sync(){
+    for(const[node]of locks)if(!node.isConnected)locks.delete(node);
+    const on=ordinary();overlay.hidden=!on;root.classList.toggle('v137-reader-controls',on);root.classList.toggle('v137-source-readonly',active());
+    toggle.textContent=enabled?'只读':'编辑';toggle.setAttribute('aria-pressed',String(enabled));toggle.setAttribute('aria-label',enabled?'当前只读，点击切换到编辑':'当前编辑，点击切换到只读');toggle.title=enabled?'点击进入编辑模式':'点击进入只读模式';
+    if(!active()){restore();return;}
+    for(const node of [root,...root.querySelectorAll('[contenteditable]')]){record(node,'editable');node.contentEditable='false';node.setAttribute('aria-readonly','true');}
+    root.querySelectorAll('input,textarea').forEach(node=>{record(node,'input');node.readOnly=true;});
+    const buttons=[...root.querySelectorAll('button,select'),...document.querySelectorAll('#rightScroll .topic-notes-ui .notes-note-card .entry-delete,#rightScroll .topic-notes-ui .notes-range')];
+    for(const id of ['textPasteBtn','paragraphInputBtn','pdfUpload']){const button=document.getElementById(id);if(button)buttons.push(button);}
+    for(const node of buttons){record(node,'button');node.disabled=true;node.setAttribute('aria-disabled','true');}
+    const label=document.getElementById('markdownUploadLabel');if(label){record(label,'label');label.setAttribute('aria-disabled','true');}
+    hideFloatingToolbar();lastSelectionRange=null;
+  }
+  toggle.addEventListener('click',()=>{
+    if(!ordinary())return;
+    if(!enabled){saveCurrentContent();document.querySelector('[data-v75-hint-cancel]')?.click();enabled=true;}
+    else {restore();enabled=false;}
+    sync();
+  });
+  function block(e){e.preventDefault();e.stopImmediatePropagation();}
+  for(const name of ['beforeinput','paste','cut','drop'])document.addEventListener(name,e=>{if(active()&&root.contains(e.target))block(e);},true);
+  document.addEventListener('keydown',e=>{
+    if(!active()||!root.contains(e.target))return;
+    const key=e.key.toLowerCase(),command=e.ctrlKey||e.metaKey;
+    if(['enter','backspace','delete','insert'].includes(key)||(command&&['v','x','z','y','b','i','u'].includes(key))||(!command&&!e.altKey&&e.key.length===1))block(e);
+  },true);
+  document.addEventListener('click',e=>{
+    if(!active())return;
+    if(e.target.closest?.('#markdownUploadLabel,[data-v108-source-choice]')||e.target.closest?.('#rightScroll .topic-notes-ui .notes-note-card .entry-delete,#rightScroll .topic-notes-ui .notes-range')||root.contains(e.target)&&e.target.closest?.('.markdown-pair-delete,.speech-pair-delete'))block(e);
+  },true);
+  const saveBase=saveCurrentContent;saveCurrentContent=function(...args){if(active())return;return saveBase.apply(this,args);};
+  const replaceBase=v108ConfirmSourceReplace;v108ConfirmSourceReplace=function(topic,action){if(active())return;return replaceBase(topic,()=>{if(!active())action();});};
+  const classifyBase=classifySelected;classifySelected=function(...args){if(active())return;return classifyBase.apply(this,args);};
+  for(const name of ['renderContent','renderRightPanel','renderVocabularyStep','renderAssets']){
+    const base=window[name];if(typeof base!=='function')continue;
+    window[name]=function(...args){if(name==='renderContent')restore();const result=base.apply(this,args);sync();return result;};
+  }
+  sync();
+})();
+
+</script>
+
+<script>
+function v139PanelAction(side,direction){window.v138Panels?.action(side,direction);}
+(() => {
+  const app=document.getElementById('app');if(!app)return;
+  const buttons={left:document.getElementById('leftPanelFoldBtn'),right:document.getElementById('rightPanelFoldBtn')};
+  let solo=null,snapshot=null,epoch=0;
+  const controls={};
+  for(const[side,button]of Object.entries(buttons)){
+    const group=document.createElement('div');group.className='v139-panel-arrows';group.setAttribute('role','group');group.setAttribute('aria-label',(side==='left'?'目录':'笔记')+'分屏控制');button.parentElement.insertBefore(group,button);group.appendChild(button);
+    const other=document.createElement('button');other.type='button';other.className='panel-fold-toggle';other.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path/></svg>';
+    if(side==='left')group.appendChild(other);else group.insertBefore(other,button);
+    controls[side]={left:side==='left'?button:other,right:side==='right'?button:other};
+    other.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();action(side,side==='left'?'right':'left');});
+    for(const name of ['pointerdown','mousedown','touchstart'])group.addEventListener(name,e=>e.stopPropagation());
+    group.addEventListener('keydown',e=>{const direction=e.key==='ArrowLeft'?'left':e.key==='ArrowRight'?'right':null;if(direction){e.preventDefault();const target=controls[side][direction];if(!target.hidden)target.focus({preventScroll:true});}});
+  }
+  const context=()=>String(typeof activeView==='undefined'?'':activeView)+':'+(getCurrentTopic()?.id||'');
+  function capture(){
+    const positions=[];
+    for(const pane of [leftPanel,centerPanel,rightPanel])for(const node of [pane,...pane.querySelectorAll('*')])if(node.scrollTop||node.scrollLeft||['topicList','centerContent','rightScroll'].includes(node.id))positions.push({node,top:node.scrollTop||0,left:node.scrollLeft||0});
+    return {ratios:(!panelFoldState.left&&!panelFoldState.right)?currentPanelRatios():{...expandedPanelRatios},fold:{...panelFoldState},positions,context:context()};
+  }
+  function labels(){
+    for(const side of ['left','right'])for(const direction of ['left','right']){
+      const button=controls[side][direction],name=side==='left'?'目录':'笔记';
+      const shown=solo?direction===(side==='left'?'left':'right'):panelFoldState[side]?direction===(side==='left'?'right':'left'):true;
+      button.hidden=!shown;
+      const text=solo?'恢复之前布局':panelFoldState[side]?'显示'+name:direction===side?'收起'+name:'仅显示'+name;
+      button.title=text;button.setAttribute('aria-label',text);button.setAttribute('aria-controls','leftPanel centerPanel rightPanel');button.removeAttribute('aria-haspopup');button.removeAttribute('aria-expanded');
+      button.querySelector('path')?.setAttribute('d',direction==='left'?'M15 5l-7 7 7 7':'M9 5l7 7-7 7');
+    }
+  }
+  function applySolo(){
+    if(!solo)return;const width=app.getBoundingClientRect().width;applyPanelWidths({left:solo==='left'?width:0,center:0,right:solo==='right'?width:0});labels();
+  }
+  function enter(side){
+    if(!['left','right'].includes(side))return;
+    cancelPendingDividerGesture();if(isDragging)finishDividerDrag();
+    if(!solo)snapshot=capture();solo=side;++epoch;
+    app.classList.toggle('v138-solo-left',side==='left');app.classList.toggle('v138-solo-right',side==='right');document.body.classList.add('v138-single-pane');applySolo();
+  }
+  function restore({position=true}={}){
+    if(!solo||!snapshot)return false;
+    const old=snapshot;solo=null;snapshot=null;const token=++epoch;
+    app.classList.remove('v138-solo-left','v138-solo-right');document.body.classList.remove('v138-single-pane');
+    Object.assign(panelFoldState,old.fold);app.classList.toggle('left-panel-collapsed',old.fold.left);app.classList.toggle('right-panel-collapsed',old.fold.right);expandedPanelRatios={...old.ratios};
+    applyPanelLayoutForCurrentState(old.ratios);updatePanelFoldButtons();labels();
+    if(position)requestAnimationFrame(()=>requestAnimationFrame(()=>{if(token!==epoch)return;for(const p of old.positions)if(p.node.isConnected&&(context()===old.context||p.node.id==='topicList')){p.node.scrollTop=p.top;p.node.scrollLeft=p.left;}}));
+    return true;
+  }
+  function action(side,direction){
+    if(!['left','right'].includes(side)||!['left','right'].includes(direction))return;
+    if(solo){restore();return;}
+    if(panelFoldState[side]||direction===side)toggleSidePanel(side);else enter(side);
+  }
+  const layout=applyPanelLayoutForCurrentState;applyPanelLayoutForCurrentState=function(...args){if(solo){applySolo();return;}return layout.apply(this,args);};
+  const ratios=currentPanelRatios;currentPanelRatios=function(){return solo&&snapshot?{...snapshot.ratios}:ratios();};
+  const save=savePanelLayout;savePanelLayout=function(...args){if(solo&&snapshot){const r=snapshot.ratios;return {version:2,ratios:{...r},leftRatio:r.left,centerRatio:r.center,rightRatio:r.right};}return save.apply(this,args);};
+  const load=applyPanelLayout;applyPanelLayout=function(...args){restore({position:false});return load.apply(this,args);};
+  const reset=resetPanelLayout;resetPanelLayout=function(...args){restore({position:false});return reset.apply(this,args);};
+  const saveScroll=saveCurrentTopicCenterScroll;saveCurrentTopicCenterScroll=function(...args){if(solo)return;return saveScroll.apply(this,args);};
+  const update=updatePanelFoldButtons;updatePanelFoldButtons=function(...args){const result=update.apply(this,args);labels();return result;};
+  const prepare=prepareDividerGesture;prepareDividerGesture=function(...args){if(solo)return false;return prepare.apply(this,args);};
+  // A note-to-source jump must show the destination before measuring its range.
+  const source=focusSourceForAsset;focusSourceForAsset=function(...args){++epoch;if(solo)restore({position:false});return source.apply(this,args);};
+  const reveal=revealAssetInRightPanel;revealAssetInRightPanel=function(...args){++epoch;if(solo)restore({position:false});if(panelFoldState.right)toggleSidePanel('right');return reveal.apply(this,args);};
+
+  window.v138Panels={action,enter,restore,get active(){return solo;}};labels();
+})();
+
+</script>
+<script>
+/* Only existing rootOrder/subcategories arrays are reordered; topic objects stay intact. */
+(() => {
+  const list=document.getElementById('topicList');if(!list)return;
+  let active=null,suppressUntil=0;
+  function order(d){if(d.kind==='root')return ensureDirectoryConfig().rootOrder;if(d.kind==='subcategory')return appData.categories.find(c=>c.id===d.parent)?.subcategories||[];return [];}
+  const key=(item,d)=>d.kind==='root'?item:item.id;
+  function move(d,index){
+    const array=order(d),from=array.findIndex(item=>key(item,d)===d.key);if(from<0)return false;
+    const to=Math.max(0,Math.min(array.length-1,index));if(from===to)return false;
+    const previous=[...array],[item]=array.splice(from,1);array.splice(to,0,item);
+    if(saveData()===false){array.splice(0,array.length,...previous);return false;}
+    const top=list.scrollTop;renderTopics();list.scrollTop=top;return true;
+  }
+  function relative(d,target,after){
+    if(!d||d.kind!==target.kind||d.parent!==target.parent)return false;
+    const array=order(d),from=array.findIndex(item=>key(item,d)===d.key),at=array.findIndex(item=>key(item,d)===target.key);
+    if(from<0||at<0||from===at)return false;return move(d,at+(after?1:0)-(from<at?1:0));
+  }
+  function clear(){list.querySelectorAll('.v138-drop-before,.v138-drop-after,.drag-over').forEach(n=>n.classList.remove('v138-drop-before','v138-drop-after','drag-over'));}
+  function enhance(header,d){
+    if(!header||header.dataset.v138Sort==='true')return;header.dataset.v138Sort='true';header.draggable=true;
+    header.addEventListener('dragstart',e=>{
+      if(e.target.closest('input,button')){e.preventDefault();return;}
+      active={...d};suppressUntil=Date.now()+350;directoryDragInProgress=true;
+      if(d.kind==='subcategory'){e.stopPropagation();e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',JSON.stringify({kind:'subcategory',categoryId:d.parent,key:d.key}));header.classList.add('dragging');}
+    },true);
+    header.addEventListener('dragend',()=>{active=null;suppressUntil=Date.now()+350;directoryDragInProgress=false;header.classList.remove('dragging');clear();});
+    header.addEventListener('click',e=>{if(Date.now()<suppressUntil){e.preventDefault();e.stopImmediatePropagation();}},true);
+    for(const eventName of ['dragover','drop'])header.addEventListener(eventName,e=>{
+      if(!active)return;
+      e.stopImmediatePropagation();const valid=active.kind===d.kind&&active.parent===d.parent&&active.key!==d.key;
+      if(!valid){clear();if(e.dataTransfer)e.dataTransfer.dropEffect='none';return;}
+      e.preventDefault();const r=header.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
+      clear();if(eventName==='dragover'){header.classList.add(after?'v138-drop-after':'v138-drop-before');e.dataTransfer.dropEffect='move';}
+      else {const source=active;active=null;directoryDragInProgress=false;suppressUntil=Date.now()+350;relative(source,d,after);}
+    },true);
+    header.addEventListener('dragleave',()=>{header.classList.remove('v138-drop-before','v138-drop-after');});
+  }
+  function sync(){
+    list.querySelectorAll('[data-root-key]').forEach(wrapper=>enhance(wrapper.querySelector(':scope > .pinned-item,:scope > .category-header'),{kind:'root',key:wrapper.dataset.rootKey}));
+    list.querySelectorAll('.subcategory-block').forEach(folder=>{const parent=folder.parentElement?.dataset.categoryId;if(parent)enhance(folder.querySelector(':scope > .subcategory-header'),{kind:'subcategory',key:folder.dataset.subcategoryId,parent});});
+  }
+  const render=renderTopics;renderTopics=function(...args){const result=render.apply(this,args);sync();return result;};
+  window.v138Directory={move,relative};sync();
+})();
+
+</script>
+<script id="v140VideoKeys">
+/* Page-scoped media keys: preserve the focused editor and its selection. */
+(() => {
+  const host=document.getElementById('workplaceMediaHost');if(!host)return;
+  let guideShown=false,timer=0;
+  const tip=document.createElement('div');tip.className='v140-video-tip';tip.hidden=true;tip.setAttribute('role','status');tip.setAttribute('aria-live','polite');tip.setAttribute('aria-atomic','true');document.body.appendChild(tip);
+  function current(){
+    const topic=getCurrentTopic();if(!isSourceVideoTopic(topic)||host.dataset.topicId!==topic?.id)return null;
+    const video=host.querySelector('video');
+    if(!video||video.error||video.readyState<1||!(video.currentSrc||video.src)||!Number.isFinite(video.duration)||video.duration<=0)return null;
+    return video;
+  }
+  function hide(){clearTimeout(timer);timer=0;tip.hidden=true;}
+  function show(text,ms=1300){clearTimeout(timer);tip.textContent=text;tip.hidden=false;timer=setTimeout(hide,ms);}
+  function seekTarget(video,delta){
+    const wanted=Math.max(0,Math.min(video.duration,(Number.isFinite(video.currentTime)?video.currentTime:0)+delta)),ranges=[];
+    for(let i=0;i<(video.seekable?.length||0);i++){const start=Math.max(0,video.seekable.start(i)),end=Math.min(video.duration,video.seekable.end(i));if(Number.isFinite(start)&&Number.isFinite(end)&&end>=start)ranges.push({start,end});}
+    if(!ranges.length||ranges.some(r=>wanted>=r.start&&wanted<=r.end))return wanted;
+    const edges=ranges.flatMap(r=>[r.start,r.end]);edges.sort((a,b)=>Math.abs(a-wanted)-Math.abs(b-wanted)||(delta>0?b-a:a-b));return edges[0];
+  }
+  function handle(event){
+    if(!event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;
+    const digit=event.code?({'Digit1':1,'Digit2':2,'Digit3':3}[event.code]):({'1':1,'2':2,'3':3}[event.key]);if(!digit)return;
+    const video=current();if(!video)return;
+    event.preventDefault();event.stopImmediatePropagation();if(event.repeat)return;
+    try{
+      if(digit===2){
+        if(video.paused||video.ended){const promise=video.play();if(promise?.catch)promise.catch(error=>{if(error?.name!=='AbortError'&&current()===video)show('无法播放，请检查视频或在播放器中重试',2200);});}
+        else video.pause();
+      }else{const delta=digit===1?-10:10;video.currentTime=seekTarget(video,delta);show(delta<0?'−10秒':'＋10秒');}
+    }catch(_){show(digit===2?'无法播放，请在播放器中重试':'视频暂时无法跳转',2200);}
+  }
+  host.addEventListener('playing',event=>{
+    if(guideShown||event.target!==current())return;guideShown=true;show('Alt+1 后退10秒 · Alt+2 播放/暂停 · Alt+3 前进10秒',3000);
+  },true);
+  const render=renderWorkplaceMediaPanel;renderWorkplaceMediaPanel=function(...args){const result=render.apply(this,args);if(!current())hide();return result;};
+  window.v140VideoKeys={handle};
+})();
+
+</script>
+<script id="v141UsagePackage">
+/* Optional field validation and old-package compatibility, keyed by the existing asset ID. */
+(() => {
+  const validate=validateLearningPackage;validateLearningPackage=function(pkg){const result=validate.apply(this,arguments);if(result.errors?.length)return result;const errors=v141UsageErrors(pkg);return errors.length?{errors}:result;};
+  const apply=applyLearningPackage;applyLearningPackage=function(pkg,resolved){
+    const errors=v141UsageErrors(pkg);if(errors.length)throw new Error(errors.join('\n'));
+    const incoming=cloneLearningPackageValue(pkg),previous=new Map(Object.values(resolved?.topic?.steps?.assets||{}).flatMap(items=>Array.isArray(items)?items:[]).filter(Boolean).map(item=>[item.id,item]));
+    Object.values(incoming.steps?.assets||{}).forEach(items=>{if(Array.isArray(items))items.forEach(item=>{const old=previous.get(item?.id);if(item&&!Object.prototype.hasOwnProperty.call(item,'usageNote')&&typeof old?.usageNote==='string')item.usageNote=old.usageNote;});});
+    return apply.call(this,incoming,resolved);
+  };
+  const build=buildCurrentLearningPackage;buildCurrentLearningPackage=function(...args){const pkg=build.apply(this,args);pkg.aiInstructions?.rules?.push('句式资产中可选 usageNote 是用户填写的纯文本用法说明，原样保留；不要新增、改写或删除');return pkg;};
+})();
+
+</script>
 
 <!-- Hi Genius Public Release: UI-only entry hiding. Keep data and feature logic intact. -->
 <style id="hiGeniusPublicReleaseStyles">
-    /* 原文第二屏：仅隐藏“上传”和“学习包”入口，不隐藏整个工具栏，也不保留空位。 */
+    /* 原文第二屏：仅隐藏“上传”和“学习包”入口，工具栏其余功能保持原样。 */
     #fileActions > #markdownUploadLabel,
     #fileActions > #exportLearningPackageBtn {
         display: none !important;
@@ -22596,18 +23648,22 @@ function buildSummaryHTML() {
         const ul = document.getElementById('topicList');
         if (!ul) return;
 
-        // 1) 只隐藏“励志金句”目录入口，保留其数据和功能代码。
+        // 只隐藏“励志金句”目录入口，不删除其数据或功能代码。
         const quoteRoot = [...ul.querySelectorAll('.standalone-feature-root')].find(root => {
-            const name = root.querySelector('.directory-name');
-            return name && name.textContent.trim() === '励志金句';
+            const name = root.querySelector('.directory-name, .standalone-feature-header');
+            return name && name.textContent.trim().startsWith('励志金句');
         });
         quoteRoot?.remove();
 
-        // 2) 只隐藏“学习经验”目录入口。
+        // 只隐藏“学习经验”目录入口。
         ul.querySelector('.learning-experience-root')?.remove();
 
-        // 3) 只隐藏基本场景口语根目录。优先使用稳定根键，不依赖显示名称。
-        const basicSceneRoot = ul.querySelector('.directory-root-wrap[data-root-key="basicScene"]');
+        // 当前版本通过 rootKey 分支生成 DOM，没有 data-root-key 属性；
+        // 因此以根目录标题识别，避免套用旧版本选择器。
+        const basicSceneRoot = [...ul.querySelectorAll(':scope > .directory-root-wrap')].find(root => {
+            const name = root.querySelector(':scope > .category-header .directory-name');
+            return name && /^基本场景口语(?:\s|\(|$)/.test(name.textContent.trim());
+        });
         if (basicSceneRoot) {
             const previous = basicSceneRoot.previousElementSibling;
             if (previous?.classList.contains('directory-section-label') && previous.textContent.trim() === '表达与积累') {
@@ -22617,7 +23673,7 @@ function buildSummaryHTML() {
         }
     }
 
-    // 覆盖最终目录重绘函数，保证切页或刷新目录后隐藏状态仍然生效。
+    // 确保首次目录渲染及后续重绘后都隐藏指定入口。
     if (typeof renderTopics === 'function') {
         const renderTopicsBeforePublicRelease = renderTopics;
         renderTopics = function(...args) {
@@ -22626,8 +23682,6 @@ function buildSummaryHTML() {
             return result;
         };
     }
-
-    // 当前 DOM 若已完成首次渲染，立即隐藏；不依赖 MutationObserver 或定时扫描。
     hidePublicReleaseEntrances();
 })();
 </script>
