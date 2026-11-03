@@ -15,8 +15,19 @@
 ---
 
 ## 主题学习资料
+### 03. Taylor Swift｜纽约大学毕业典礼演讲 | Taylor Swift's 2022 NYU Commencement Address
 
-### 01. 如何应对焦虑｜How to Deal with Anxiety
+Taylor Swift 在纽约大学毕业典礼上的演讲及其配套英语学习资料。
+
+| 资料类型 | 文件 | 下载 |
+|---|---|---|
+| 学习包（JSON） | `3-Learning_Pack.json` | [下载 JSON](https://github.com/potatoniniviber/hi-genius/releases/download/V1.2.0/3-Learning_Pack.json) |
+| 配套视频（ZIP） | `3-Video.zip` | [下载视频 ZIP](https://github.com/potatoniniviber/hi-genius/releases/download/V1.2.0/3-Video.zip) |
+
+发布版本：[Hi Genius V1.2.0](https://github.com/potatoniniviber/hi-genius/releases/tag/V1.2.0)
+
+---
+### 02. 如何应对焦虑｜How to Deal with Anxiety
 
 围绕 Olivia Remes 的演讲《如何应对焦虑》整理的学习资料。
 
